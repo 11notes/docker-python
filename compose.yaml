@@ -1,0 +1,8 @@
+name: "python"
+services:
+  python:
+    image: "11notes/python:3.11"
+    container_name: "python"
+    environment:
+      TZ: "Europe/Zurich"
+    restart: "always"

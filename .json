@@ -1,0 +1,8 @@
+{
+  "image":"11notes/python",
+  "description":"Python, compiled from source",
+  "name":"python",
+  "version":"3.11",
+  "root":"/python",  
+  "parent":"11notes/alpine:stable"
+}

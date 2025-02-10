@@ -1,0 +1,6 @@
+.git*
+*.md
+LICENSE
+img/
+maintain/
+project*
