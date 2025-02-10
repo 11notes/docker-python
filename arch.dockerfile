@@ -1,8 +1,5 @@
 # :: Util
-  FROM alpine/git AS util
-  ARG NO_CACHE
-  RUN set -ex; \
-    git clone https://github.com/11notes/docker-util.git;
+  FROM 11notes/util AS util
 
 # :: Build / python3
   FROM 11notes/apk:stable AS build
@@ -34,7 +31,7 @@
     ENV PYTHON_VERSION=
 
   # :: multi-stage
-    COPY --from=util /git/docker-util/src/ /usr/local/bin
+    COPY --from=util /usr/local/bin/ /usr/local/bin
     COPY --from=build /apk/ /apk
 
 # :: Run
@@ -42,12 +39,21 @@
 
   # :: install application
     RUN set -ex; \
+      mkdir -p ${APP_ROOT}; \
       case ${APP_VERSION} in \
         "3.11") PYTHON_VERSION=3.11.11-r0;; \
         "3.12") PYTHON_VERSION=3.12.9-r0;; \
       esac; \
       apk --no-cache --allow-untrusted --repository /apk add \
         python3=${PYTHON_VERSION};
+
+  # :: copy filesystem changes and set correct permissions
+    COPY ./rootfs /
+    RUN set -ex; \
+      chmod +x -R /usr/local/bin; \
+      chown -R 1000:1000 \
+        /usr/local/bin \
+        ${APP_ROOT};
 
 # :: Start
   USER docker
