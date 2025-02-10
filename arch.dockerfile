@@ -39,7 +39,6 @@
 
   # :: install application
     RUN set -ex; \
-      mkdir -p ${APP_ROOT}; \
       case ${APP_VERSION} in \
         "3.11") PYTHON_VERSION=3.11.11-r0;; \
         "3.12") PYTHON_VERSION=3.12.9-r0;; \
@@ -48,12 +47,10 @@
         python3=${PYTHON_VERSION};
 
   # :: copy filesystem changes and set correct permissions
-    COPY ./rootfs /
     RUN set -ex; \
       chmod +x -R /usr/local/bin; \
       chown -R 1000:1000 \
-        /usr/local/bin \
-        ${APP_ROOT};
+        /usr/local/bin;
 
 # :: Start
   USER docker
