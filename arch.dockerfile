@@ -98,7 +98,7 @@
       case "${TARGETARCH}${TARGETVARIANT}" in \
         "amd64"|"arm64") EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer" ;;\
       esac; \
-      eleven log debug "EXTRA_CFLAGS=${EXTRA_CFLAGS}"; \
+      eleven log info "EXTRA_CFLAGS=${EXTRA_CFLAGS}"; \
       make -s -j $(nproc) \
         EXTRA_CFLAGS="${EXTRA_CFLAGS}" \
         LDFLAGS="-Wl,--strip-all"; \
