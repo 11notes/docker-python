@@ -1,8 +1,7 @@
 name: "python"
 services:
   python:
-    image: "11notes/python:3.11"
-    container_name: "python"
+    image: "11notes/python:3.13.3"
     environment:
       TZ: "Europe/Zurich"
-    restart: "always"
+    command: "--version"

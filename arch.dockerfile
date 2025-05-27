@@ -1,56 +1,136 @@
-# :: Util
+# ╔═════════════════════════════════════════════════════╗
+# ║                       SETUP                         ║
+# ╚═════════════════════════════════════════════════════╝
+  # GLOBAL
+  ARG APP_UID=1000 \
+      APP_GID=1000
+
+  # :: FOREIGN IMAGES
   FROM 11notes/util AS util
 
-# :: Build / python3
-  FROM 11notes/apk:stable AS build
-  ARG APP_VERSION
-  ENV ALPINE_VERSION=
-
-  RUN set -ex; \
-    case ${APP_VERSION} in \
-      "3.11") ALPINE_VERSION=3.19;; \
-      "3.12") ALPINE_VERSION=3.21;; \
-    esac; \
-    amake python3 ${ALPINE_VERSION};
-
-# :: Header
+# ╔═════════════════════════════════════════════════════╗
+# ║                       IMAGE                         ║
+# ╚═════════════════════════════════════════════════════╝
+  # :: HEADER
   FROM 11notes/alpine:stable
 
-  # :: arguments
-    ARG TARGETARCH
-    ARG APP_IMAGE
-    ARG APP_NAME
-    ARG APP_VERSION
-    ARG APP_ROOT
+  # :: default arguments
+    ARG TARGETPLATFORM \
+        TARGETOS \
+        TARGETARCH \
+        TARGETVARIANT \
+        APP_IMAGE \
+        APP_NAME \
+        APP_VERSION \
+        APP_ROOT \
+        APP_UID \
+        APP_GID \
+        APP_NO_CACHE
 
-  # :: environment
-    ENV APP_IMAGE=${APP_IMAGE}
-    ENV APP_NAME=${APP_NAME}
-    ENV APP_VERSION=${APP_VERSION}
-    ENV APP_ROOT=${APP_ROOT}
-    ENV PYTHON_VERSION=
+  # :: default python image
+    ARG PIP_ROOT_USER_ACTION=ignore \
+        PIP_BREAK_SYSTEM_PACKAGES=1 \
+        PIP_DISABLE_PIP_VERSION_CHECK=1 \
+        PIP_NO_CACHE_DIR=1
+
+  # :: app specific arguments
+    ARG EXTRA_CFLAGS="-DTHREAD_STACK_SIZE=0x100000 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer" \
+        LANG=en_US
+
+  # :: default environment
+    ENV APP_IMAGE=${APP_IMAGE} \
+        APP_NAME=${APP_NAME} \
+        APP_VERSION=${APP_VERSION} \
+        APP_ROOT=${APP_ROOT}
+
+  # :: app specific environment
+    ENV PYTHONDONTWRITEBYTECODE=1
 
   # :: multi-stage
-    COPY --from=util /usr/local/bin/ /usr/local/bin
-    COPY --from=build /apk/ /apk
+    COPY --from=util /usr/local/bin /usr/local/bin
 
-# :: Run
+# :: RUN
   USER root
+  RUN eleven printenv;
 
-  # :: install application
+  # :: install dependencies
     RUN set -ex; \
-      case ${APP_VERSION} in \
-        "3.11") PYTHON_VERSION=3.11.11-r0;; \
-        "3.12") PYTHON_VERSION=3.12.9-r0;; \
-      esac; \
-      apk --no-cache --allow-untrusted --repository /apk add \
-        python3=${PYTHON_VERSION};
+      apk --no-cache --update --virtual .build add \
+        tar \
+        xz \
+        bluez-dev \
+        bzip2-dev \
+        dpkg-dev \
+        dpkg \
+        findutils \
+        gcc \
+        gdbm-dev \
+        libc-dev \
+        libffi-dev \
+        libnsl-dev \
+        libtirpc-dev \
+        linux-headers \
+        make \
+        ncurses-dev \
+        openssl-dev \
+        pax-utils \
+        readline-dev \
+        sqlite-dev \
+        tcl-dev \
+        tk \
+        tk-dev \
+        util-linux-dev \
+        xz-dev \
+        zlib-dev \
+        build-base \
+        upx \
+        musl-dev \
+        musl-locales; \
+      curl -SL https://www.python.org/ftp/python/${APP_VERSION}/Python-${APP_VERSION}.tar.xz | tar -xJC /; \
+      cd /Python-${APP_VERSION}; \
+      ./configure \
+        --build="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
+        --enable-loadable-sqlite-extensions \
+        --enable-option-checking=fatal \
+        --enable-shared \
+        --with-lto \
+        --with-ensurepip; \
+      make -s -j $(nproc) \
+        EXTRA_CFLAGS="${EXTRA_CFLAGS}" \
+        LDFLAGS="-Wl,--strip-all"; \
+      rm python; \
+      make -s -j $(nproc) \
+        EXTRA_CFLAGS="${EXTRA_CFLAGS}" \
+        LDFLAGS="-Wl,--strip-all,-rpath='\$\$ORIGIN/../lib'" \
+        python; \
+      make install; \
+      rm -rf /Python-${APP_VERSION}; \
+      cd /; \
+      find /usr/local -depth \
+        \( \
+          \( -type d -a \( -name test -o -name tests -o -name idle_test \) \) \
+          -o \( -type f -a \( -name '*.pyc' -o -name '*.pyo' -o -name 'libpython*.a' \) \) \
+        \) -exec rm -rf '{}' + \
+      ; \
+      find /usr/local -type f -executable -not \( -name '*tkinter*' \) -exec scanelf --needed --nobanner --format '%n#p' '{}' ';' \
+        | tr ',' '\n' \
+        | sort -u \
+        | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+        | xargs -rt apk add --no-network --virtual .python-rundeps \
+      ; \
+      eleven rstrip; \
+      apk del --no-network .build; \
+      for src in idle3 pip3 pydoc3 python3 python3-config; do \
+        dst="$(echo "$src" | tr -d 3)"; \
+        [ -s "/usr/local/bin/$src" ]; \
+        [ ! -e "/usr/local/bin/$dst" ]; \
+        ln -svT "$src" "/usr/local/bin/$dst"; \
+      done;
 
-  # :: copy filesystem changes and set correct permissions
+  # :: copy root filesystem and set correct permissions
     RUN set -ex; \
-      chmod +x -R /usr/local/bin; \
-      chown -R 1000:1000 \
-        /usr/local/bin;
+      chmod +x -R /usr/local/bin;
 
-# :: Start
-  USER docker
+# :: EXECUTE
+  USER ${APP_UID}:${APP_GID}
+  ENTRYPOINT ["python3"]
