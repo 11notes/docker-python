@@ -34,7 +34,7 @@
         PIP_NO_CACHE_DIR=1
 
   # :: app specific arguments
-    ARG EXTRA_CFLAGS="-DTHREAD_STACK_SIZE=0x100000 -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer" \
+    ARG EXTRA_CFLAGS="-DTHREAD_STACK_SIZE=0x100000" \
         LANG=en_US
 
   # :: default environment
@@ -95,6 +95,10 @@
         --enable-shared \
         --with-lto \
         --with-ensurepip; \
+      case "${TARGETARCH}${TARGETVARIANT}" in \
+        "amd64"|"arm64") EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer" ;;\
+      esac; \
+      eleven log debug "EXTRA_CFLAGS=${EXTRA_CFLAGS}"; \
       make -s -j $(nproc) \
         EXTRA_CFLAGS="${EXTRA_CFLAGS}" \
         LDFLAGS="-Wl,--strip-all"; \
