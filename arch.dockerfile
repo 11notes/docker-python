@@ -51,10 +51,10 @@
 
 # :: RUN
   USER root
-  RUN eleven printenv;
 
   # :: install dependencies
     RUN set -ex; \
+      eleven printenv; \
       apk --no-cache --update --virtual .build add \
         tar \
         xz \
@@ -82,8 +82,6 @@
         util-linux-dev \
         xz-dev \
         zlib-dev \
-        build-base \
-        upx \
         musl-dev \
         musl-locales; \
       curl -SL https://www.python.org/ftp/python/${APP_VERSION}/Python-${APP_VERSION}.tar.xz | tar -xJC /; \
@@ -122,7 +120,6 @@
         | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
         | xargs -rt apk add --no-network --virtual .python-rundeps \
       ; \
-      eleven rstrip; \
       apk del --no-network .build; \
       for src in idle3 pip3 pydoc3 python3 python3-config; do \
         dst="$(echo "$src" | tr -d 3)"; \
@@ -137,4 +134,5 @@
 
 # :: EXECUTE
   USER ${APP_UID}:${APP_GID}
-  ENTRYPOINT ["python3"]
+  ENTRYPOINT ["/bin/ash"]
+  CMD ["python3"]
