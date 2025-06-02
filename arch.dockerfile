@@ -55,8 +55,6 @@
     RUN set -ex; \
       eleven printenv; \
       apk --no-cache --update --virtual .build add \
-        upx \
-        build-base \
         tar \
         xz \
         bluez-dev \
@@ -92,7 +90,8 @@
         --enable-loadable-sqlite-extensions \
         --enable-option-checking=fatal \
         --enable-shared \
-        --with-lto; \
+        --with-lto \
+        --with-ensurepip; \
       case "${TARGETARCH}${TARGETVARIANT}" in \
         "amd64"|"arm64") EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer" ;;\
       esac; \
@@ -119,15 +118,18 @@
         | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
         | xargs -rt apk add --no-network --virtual .python-rundeps \
       ; \
-      eleven rstrip; \
       apk del --no-network .build; \
-      for src in idle3 pydoc3 python3 python3-config; do \
+      apk --no-cache --update --virtual .rstrip add \
+        upx \
+        build-base; \
+      eleven rstrip; \
+      apk del --no-network .rstrip; \
+      for src in idle3 pip3 pydoc3 python3 python3-config; do \
         dst="$(echo "$src" | tr -d 3)"; \
         [ -s "/usr/local/bin/$src" ]; \
         [ ! -e "/usr/local/bin/$dst" ]; \
         ln -svT "$src" "/usr/local/bin/$dst"; \
-      done; \
-      rm -rf /usr/local/lib/python3.13/site-packages/pip;
+      done;
 
 # :: EXECUTE
   USER ${APP_UID}:${APP_GID}
