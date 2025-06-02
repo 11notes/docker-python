@@ -34,8 +34,7 @@
         PIP_NO_CACHE_DIR=1
 
   # :: app specific arguments
-    ARG EXTRA_CFLAGS="-DTHREAD_STACK_SIZE=0x100000" \
-        LANG=en_US
+    ARG EXTRA_CFLAGS="-DTHREAD_STACK_SIZE=0x100000"
 
   # :: default environment
     ENV APP_IMAGE=${APP_IMAGE} \
@@ -127,11 +126,8 @@
         [ -s "/usr/local/bin/$src" ]; \
         [ ! -e "/usr/local/bin/$dst" ]; \
         ln -svT "$src" "/usr/local/bin/$dst"; \
-      done;
-
-  # :: copy root filesystem and set correct permissions
-    RUN set -ex; \
-      chmod +x -R /usr/local/bin;
+      done; \
+      rm -rf /usr/local/lib/python3.13/site-packages/pip;
 
 # :: EXECUTE
   USER ${APP_UID}:${APP_GID}
