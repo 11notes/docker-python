@@ -45,15 +45,11 @@
   # :: app specific environment
     ENV PYTHONDONTWRITEBYTECODE=1
 
-  # :: multi-stage
-    COPY --from=util /usr/local/bin /usr/local/bin
-
 # :: RUN
   USER root
 
   # :: install dependencies
     RUN set -ex; \
-      eleven printenv; \
       apk --no-cache --update --virtual .build add \
         tar \
         xz \
@@ -87,6 +83,7 @@
       cd /Python-${APP_VERSION}; \
       ./configure \
         --build="$(dpkg-architecture --query DEB_BUILD_GNU_TYPE)" \
+        --disable-test-modules \
         --enable-loadable-sqlite-extensions \
         --enable-option-checking=fatal \
         --enable-shared \
@@ -119,18 +116,15 @@
         | xargs -rt apk add --no-network --virtual .python-rundeps \
       ; \
       apk del --no-network .build; \
-      apk --no-cache --update --virtual .rstrip add \
-        upx \
-        build-base; \
-      eleven rstrip; \
-      apk del --no-network .rstrip; \
       for src in idle3 pip3 pydoc3 python3 python3-config; do \
         dst="$(echo "$src" | tr -d 3)"; \
         [ -s "/usr/local/bin/$src" ]; \
         [ ! -e "/usr/local/bin/$dst" ]; \
         ln -svT "$src" "/usr/local/bin/$dst"; \
-      done;
+      done; \
+      python --version; \
+      pip --version;
 
 # :: EXECUTE
   USER ${APP_UID}:${APP_GID}
-  ENTRYPOINT ["/usr/local/bin/python3"]
+  ENTRYPOINT ["/usr/local/bin/python"]
