@@ -1,20 +1,18 @@
 {
-  "image":"11notes/python",
-  "name":"python",
-  "root":"/",
-  "arch":"linux/amd64,linux/arm64,linux/arm/v7",
-  
-  "semver":{
-    "version":"3.13.3"
+  "image": "11notes/python",
+  "name": "python",
+  "root": "/",
+  "arch": "linux/amd64,linux/arm64,linux/arm/v7",
+  "semver": {
+    "version": "3.13.4"
   },
-
-  "readme":{
-    "description":"Python with 11notes/alpine and mimalloc as base",
-    "parent":{
-      "image":"11notes/alpine:stable"
+  "readme": {
+    "description": "Python with 11notes/alpine and mimalloc as base",
+    "parent": {
+      "image": "11notes/alpine:stable"
     },
-    "built":{
-      "11notes/py-python":"https://github.com/11notes/fork-py-python"
+    "built": {
+      "11notes/py-python": "https://github.com/11notes/fork-py-python"
     }
   }
 }
