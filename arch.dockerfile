@@ -43,7 +43,8 @@
         APP_ROOT=${APP_ROOT}
 
   # :: app specific environment
-    ENV PYTHONDONTWRITEBYTECODE=1
+    ENV PYTHONDONTWRITEBYTECODE=1 \
+        PYTHONUNBUFFERED=1
 
 # :: RUN
   USER root
@@ -121,9 +122,7 @@
         [ -s "/usr/local/bin/$src" ]; \
         [ ! -e "/usr/local/bin/$dst" ]; \
         ln -svT "$src" "/usr/local/bin/$dst"; \
-      done; \
-      python --version; \
-      pip --version;
+      done;
 
 # :: EXECUTE
   USER ${APP_UID}:${APP_GID}
