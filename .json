@@ -12,7 +12,7 @@
       "image": "11notes/alpine:stable"
     },
     "built": {
-      "11notes/py-python": "https://github.com/11notes/fork-py-python"
+      "python": "https://github.com/python/cpython"
     }
   }
 }
