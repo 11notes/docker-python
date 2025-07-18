@@ -1,4 +1,4 @@
-${{ content_synopsis }} Run Python based on [11notes/alpine](https://github.com/11notes/docker-alpine) with mimalloc memory allocator.
+${{ content_synopsis }} Run Python with mimalloc memory allocator.
 
 ${{ content_compose }}
 
