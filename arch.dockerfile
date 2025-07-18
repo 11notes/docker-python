@@ -14,6 +14,7 @@
 # ╚═════════════════════════════════════════════════════╝
 # :: HEADER
   FROM python:${APP_VERSION}-alpine
+  COPY ./rootfs /
 
     # :: default arguments
       ARG TARGETPLATFORM \
@@ -57,7 +58,8 @@
     apk --no-cache --update --repository https://dl-cdn.alpinelinux.org/alpine/edge/main \
       upgrade; \
     addgroup --gid 1000 -S docker; \
-    adduser --uid 1000 -D -S -h ${APP_ROOT} -s /sbin/nologin -G docker docker;
+    adduser --uid 1000 -D -S -h ${APP_ROOT} -s /sbin/nologin -G docker docker; \
+    chmod +x -R /usr/local/bin;
 
 # :: EXECUTE
   USER ${APP_UID}:${APP_GID}
