@@ -46,6 +46,7 @@
 # :: INSTALL
   RUN set -ex; \
     apk --no-cache --update --repository https://dl-cdn.alpinelinux.org/alpine/edge/main add \
+      sqlite-libs \
       ca-certificates \
       curl \
       tzdata; \
