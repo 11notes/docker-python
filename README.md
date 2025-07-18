@@ -6,7 +6,7 @@
 Python with 11notes/alpine and mimalloc as base
 
 # SYNOPSIS 📖
-**What can I do with this?** Run Python based on [11notes/alpine](https://github.com/11notes/docker-alpine) with mimalloc memory allocator.
+**What can I do with this?** Run Python with mimalloc memory allocator.
 
 # COMPOSE ✂️
 ```yaml
@@ -51,7 +51,7 @@ These are the main tags for the image. There is also a tag for each commit and i
 * [3.13.5](https://hub.docker.com/r/11notes/python/tags?name=3.13.5)
 
 ### There is no latest tag, what am I supposed to do about updates?
-It is of my opinion that the ```:latest``` tag is super dangerous. Many times, I’ve introduced **breaking** changes to my images. This would have messed up everything for some people. If you don’t want to change the tag to the latest [semver](https://semver.org/), simply use the short versions of [semver](https://semver.org/). Instead of using ```:3.13.5``` you can use ```:3``` or ```:3.13```. Since on each new version these tags are updated to the latest version of the software, using them is identical to using ```:latest``` but at least fixed to a major or minor version.
+It is of my opinion that the ```:latest``` tag is dangerous. Many times, I’ve introduced **breaking** changes to my images. This would have messed up everything for some people. If you don’t want to change the tag to the latest [semver](https://semver.org/), simply use the short versions of [semver](https://semver.org/). Instead of using ```:3.13.5``` you can use ```:3``` or ```:3.13```. Since on each new version these tags are updated to the latest version of the software, using them is identical to using ```:latest``` but at least fixed to a major or minor version.
 
 If you still insist on having the bleeding edge release of this app, simply use the ```:rolling``` tag, but be warned! You will get the latest version of the app instantly, regardless of breaking changes or security issues or what so ever. You do this at your own risk!
 
@@ -80,4 +80,4 @@ docker pull quay.io/11notes/python:3.13.5
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-python/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-python/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-python/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 16.06.2025, 12:51:11 (CET)*
+*created 18.07.2025, 10:19:33 (CET)*
