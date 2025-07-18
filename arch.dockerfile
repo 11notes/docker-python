@@ -6,9 +6,7 @@
       APP_GID=1000 \
       APP_VERSION=3.13.5
 
-  # :: FOREIGN IMAGES
-  FROM 11notes/mimalloc:2.2.2 AS mimalloc
-
+      
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
 # ╚═════════════════════════════════════════════════════╝
@@ -40,9 +38,6 @@
     # :: app specific environment
       ENV PYTHONDONTWRITEBYTECODE=1 \
           PYTHONUNBUFFERED=1
-
-    # :: multi-stage
-      COPY --from=mimalloc /usr/lib/libmimalloc.so /usr/lib/
 
 # :: INSTALL
   ARG APP_NO_CACHE
