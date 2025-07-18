@@ -57,7 +57,7 @@
     apk --no-cache --update --repository https://dl-cdn.alpinelinux.org/alpine/edge/main \
       upgrade; \
     addgroup --gid 1000 -S docker; \
-    adduser --uid 1000 -D -S -h ${APP_ROOT} -s /sbin/nologin -G docker docker; \
+    adduser --uid 1000 -D -S -h ${APP_ROOT} -s /sbin/nologin -G docker docker;
 
 # :: EXECUTE
   USER ${APP_UID}:${APP_GID}
