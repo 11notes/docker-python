@@ -6,7 +6,7 @@
       APP_GID=1000 \
       APP_VERSION=3.13.5
 
-      
+
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
 # ╚═════════════════════════════════════════════════════╝
@@ -31,9 +31,7 @@
       ENV APP_IMAGE=${APP_IMAGE} \
           APP_NAME=${APP_NAME} \
           APP_VERSION=${APP_VERSION} \
-          APP_ROOT=${APP_ROOT} \
-          LD_PRELOAD=/usr/lib/libmimalloc.so \
-          MIMALLOC_LARGE_OS_PAGES=1
+          APP_ROOT=${APP_ROOT}
 
     # :: app specific environment
       ENV PYTHONDONTWRITEBYTECODE=1 \
