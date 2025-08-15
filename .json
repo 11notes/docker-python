@@ -4,7 +4,7 @@
   "root": "/",
   "arch": "linux/amd64,linux/arm64,linux/arm/v7",
   "semver": {
-    "version": "3.13.6"
+    "version": "3.13.7"
   },
   "readme": {
     "description": "Python with 11notes/alpine and mimalloc as base",
