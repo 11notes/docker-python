@@ -1,4 +1,4 @@
-${{ content_synopsis }} Run Python with mimalloc memory allocator.
+${{ content_synopsis }} Run Python with some defaults.
 
 ${{ content_compose }}
 
