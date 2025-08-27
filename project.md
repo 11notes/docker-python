@@ -1,4 +1,4 @@
-${{ content_synopsis }} Run Python with some defaults.
+${{ content_synopsis }} Run Python with some defaults for better use in containers.
 
 ${{ content_compose }}
 
