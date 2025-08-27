@@ -13,5 +13,8 @@
     "built": {
       "python": "https://github.com/python/cpython"
     }
+  },
+  "grype":{
+    "severity":"critical"
   }
 }
