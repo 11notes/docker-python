@@ -3,10 +3,10 @@
 # PYTHON
 ![size](https://img.shields.io/docker/image-size/11notes/python/3.13.7?color=0eb305)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![version](https://img.shields.io/docker/v/11notes/python/3.13.7?color=eb7a09)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![pulls](https://img.shields.io/docker/pulls/11notes/python?color=2b75d6)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)[<img src="https://img.shields.io/github/issues/11notes/docker-PYTHON?color=7842f5">](https://github.com/11notes/docker-PYTHON/issues)![5px](https://github.com/11notes/defaults/blob/main/static/img/transparent5x2px.png?raw=true)![swiss_made](https://img.shields.io/badge/Swiss_Made-FFFFFF?labelColor=FF0000&logo=data:image/svg%2bxml;base64,PHN2ZyB2ZXJzaW9uPSIxIiB3aWR0aD0iNTEyIiBoZWlnaHQ9IjUxMiIgdmlld0JveD0iMCAwIDMyIDMyIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogIDxyZWN0IHdpZHRoPSIzMiIgaGVpZ2h0PSIzMiIgZmlsbD0idHJhbnNwYXJlbnQiLz4KICA8cGF0aCBkPSJtMTMgNmg2djdoN3Y2aC03djdoLTZ2LTdoLTd2LTZoN3oiIGZpbGw9IiNmZmYiLz4KPC9zdmc+)
 
-Python with 11notes/alpine and mimalloc as base
+Python with best practice defaults for container images
 
 # SYNOPSIS 📖
-**What can I do with this?** Run Python with some defaults.
+**What can I do with this?** Run Python with some defaults for better use in containers.
 
 # COMPOSE ✂️
 ```yaml
@@ -80,4 +80,4 @@ docker pull quay.io/11notes/python:3.13.7
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-python/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-python/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-python/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 20.08.2025, 10:26:35 (CET)*
+*created 27.08.2025, 09:19:08 (CET)*
