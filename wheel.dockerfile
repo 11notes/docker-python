@@ -23,12 +23,16 @@
       g++ \
       cargo \
       cython \
+      poetry \
+      patchelf \
       python3-dev \
       py3-pkgconfig \
       py3-setuptools \
       py3-maturin \
       py3-gpep517 \
       py3-wheel \
+      py3-setuptools-rust \
+      py3-virtualenv \
       linux-headers \
       openssl-dev;
 
