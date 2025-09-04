@@ -53,12 +53,7 @@
           APP_ROOT=${APP_ROOT}
 
     # :: app specific environment
-      ENV PYTHONDONTWRITEBYTECODE=1 \
-          PYTHONUNBUFFERED=1 \
-          PIP_ROOT_USER_ACTION=ignore \
-          PIP_BREAK_SYSTEM_PACKAGES=1 \
-          PIP_DISABLE_PIP_VERSION_CHECK=1 \
-          PIP_NO_CACHE_DIR=0
+      ENV PIP_NO_CACHE_DIR=0
 
     # :: multi-stage
       COPY --from=build / /
