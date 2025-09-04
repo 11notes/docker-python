@@ -4,12 +4,16 @@
 # GLOBAL
   ARG APP_VERSION=3.13.5
 
+# :: FOREIGN IMAGES
+  FROM 11notes/util:bin AS util-bin
+
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       BUILD                         ║
 # ╚═════════════════════════════════════════════════════╝
 # :: WHEEL
   FROM 11notes/python:${APP_VERSION} AS build
+  COPY --from=util-bin / /
 
   USER root
 
