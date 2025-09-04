@@ -20,14 +20,15 @@
   RUN set -ex; \
     apk --no-cache --update add \
       git \
+      g++ \
       cargo \
+      cython \
       python3-dev \
       py3-pkgconfig \
       py3-setuptools \
       py3-maturin \
       py3-gpep517 \
       py3-wheel \
-      g++ \
       linux-headers \
       openssl-dev;
 
