@@ -1,9 +1,6 @@
 # ╔═════════════════════════════════════════════════════╗
 # ║                       SETUP                         ║
 # ╚═════════════════════════════════════════════════════╝
-# GLOBAL
-  ARG APP_VERSION=3.13.5
-
 # :: FOREIGN IMAGES
   FROM 11notes/util:bin AS util-bin
 
@@ -22,19 +19,26 @@
       git \
       g++ \
       cargo \
-      cython \
-      poetry \
+      build-base \
       patchelf \
-      python3-dev \
-      py3-pkgconfig \
-      py3-setuptools \
-      py3-maturin \
-      py3-gpep517 \
-      py3-wheel \
-      py3-setuptools-rust \
-      py3-virtualenv \
       linux-headers \
-      openssl-dev;
+      openssl-dev \
+      libffi-dev;
+
+  RUN set -ex; \
+    pip install --no-binary :all: --no-cache-dir -f https://11notes.github.io/python-wheels/ \
+      gpep517 \
+      pkgconfig \
+      setuptools \
+      setuptools-rust \
+      maturin \
+      wheel \
+      virtualenv \
+      cython \
+      poetry;
+
+  RUN set -ex; \
+    rm -rf /root/.cache/pip/wheels/*;
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
