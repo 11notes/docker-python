@@ -26,7 +26,7 @@
       libffi-dev;
 
   RUN set -ex; \
-    pip install --no-binary :all: --no-cache-dir -f https://11notes.github.io/python-wheels/ \
+    pip install \
       gpep517 \
       pkgconfig \
       setuptools \
@@ -36,9 +36,6 @@
       virtualenv \
       cython \
       poetry;
-
-  RUN set -ex; \
-    rm -rf /root/.cache/pip/wheels/*;
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
