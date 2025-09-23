@@ -18,6 +18,7 @@ services:
       TZ: "Europe/Zurich"
     command: "--version"
 ```
+To find out how you can change the default UID/GID of this container image, consult the [how-to.changeUIDGID](https://github.com/11notes/RTFM/blob/main/linux/container/image/11notes/how-to.changeUIDGID.md#change-uidgid-the-correct-way) section of my [RTFM](https://github.com/11notes/RTFM)
 
 # BUILD 🚧
 ```yaml
@@ -80,4 +81,4 @@ docker pull quay.io/11notes/python:3.13.7
 # ElevenNotes™️
 This image is provided to you at your own risk. Always make backups before updating an image to a different version. Check the [releases](https://github.com/11notes/docker-python/releases) for breaking changes. If you have any problems with using this image simply raise an [issue](https://github.com/11notes/docker-python/issues), thanks. If you have a question or inputs please create a new [discussion](https://github.com/11notes/docker-python/discussions) instead of an issue. You can find all my other repositories on [github](https://github.com/11notes?tab=repositories).
 
-*created 27.08.2025, 09:19:08 (CET)*
+*created 23.09.2025, 09:14:18 (CET)*
