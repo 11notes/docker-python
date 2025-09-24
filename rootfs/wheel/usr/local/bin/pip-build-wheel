@@ -1,0 +1,14 @@
+#/bin/sh
+  mkdir -p /pip/wheels
+  mkdir -p ${PWD}/.dist
+
+  pip wheel \
+    --wheel-dir /pip/wheels \
+    $@
+
+  for WHL in $@; do
+    if echo "${WHL}" | grep -q "=="; then
+      WHL=$(echo "${WHL}" | awk -F "==" '{print $1}')
+    fi
+    find /pip/wheels -name "*${WHL}*.whl" -exec mv "{}" ${PWD}/.dist ";"
+  done

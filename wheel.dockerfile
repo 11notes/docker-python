@@ -14,6 +14,7 @@
 # :: WHEEL
   FROM 11notes/python:${APP_VERSION} AS build
   COPY --from=util-bin / /
+  COPY ./rootfs/wheel/ /
 
   USER root
 
@@ -39,6 +40,9 @@
       virtualenv \
       cython \
       poetry;
+
+  RUN set -ex; \
+    chmod +x -R /usr/local/bin;
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
