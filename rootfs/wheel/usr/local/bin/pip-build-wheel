@@ -13,4 +13,4 @@
     find /pip/wheels -name "*${WHL}*.whl" -exec cp "{}" /.dist ";"
   done
 
-  /usr/local/bin/fix-wheel-arch
+  /usr/local/bin/audit-build-wheel

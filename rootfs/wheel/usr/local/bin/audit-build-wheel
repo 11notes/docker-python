@@ -1,0 +1,4 @@
+#/bin/sh
+  for WHEEL in /.dist/*; do
+    auditwheel show ${WHEEL}
+  done
