@@ -38,7 +38,8 @@
       wheel \
       virtualenv \
       cython \
-      poetry;
+      poetry \
+      pur;
 
   COPY ./rootfs/wheel/ /
 
