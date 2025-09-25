@@ -1,0 +1,8 @@
+#/bin/sh
+  for FILE in /dist/*; do
+    case "${TARGETARCH}${TARGETVARIANT}" in
+      "amd64") mv ${FILE} $(echo "${FILE}" | sed -E 's/(aarch64|armv71)/x86_64/g');;
+      "arm64") mv ${FILE} $(echo "${FILE}" | sed -E 's/(x86_64|armv71)/aarch64/g');;
+      "armv7") mv ${FILE} $(echo "${FILE}" | sed -E 's/(x86_64|aarch64)/armv7l/g');;
+    esac
+  done

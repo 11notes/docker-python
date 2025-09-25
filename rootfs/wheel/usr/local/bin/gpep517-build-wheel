@@ -1,0 +1,8 @@
+#/bin/sh
+  mkdir -p /.dist
+
+  gpep517 build-wheel \
+    --wheel-dir /.dist \
+    --output-fd 3 3>&1 >&2;
+
+  sh fix-wheel-arch

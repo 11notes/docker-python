@@ -1,6 +1,6 @@
 #/bin/sh
   mkdir -p /pip/wheels
-  mkdir -p ${PWD}/.dist
+  mkdir -p /.dist
 
   pip wheel \
     --wheel-dir /pip/wheels \
@@ -10,5 +10,7 @@
     if echo "${WHL}" | grep -q "=="; then
       WHL=$(echo "${WHL}" | awk -F "==" '{print $1}')
     fi
-    find /pip/wheels -name "*${WHL}*.whl" -exec mv "{}" ${PWD}/.dist ";"
+    find /pip/wheels -name "*${WHL}*.whl" -exec cp "{}" /.dist ";"
   done
+
+  sh fix-wheel-arch
