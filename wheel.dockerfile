@@ -39,7 +39,8 @@
       virtualenv \
       cython \
       poetry \
-      pur;
+      pur \
+      auditwheel;
 
   COPY ./rootfs/wheel/ /
 
