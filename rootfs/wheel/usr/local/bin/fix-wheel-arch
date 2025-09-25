@@ -1,6 +1,6 @@
 #/bin/sh
   SRC=/.dist
-  
+
   for FILE in ${SRC}/*; do
     case "${TARGETARCH}${TARGETVARIANT}" in
       "amd64") mv ${FILE} $(echo "${FILE}" | sed -E 's/(aarch64|armv71)/x86_64/g');;
