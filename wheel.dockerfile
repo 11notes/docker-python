@@ -22,11 +22,14 @@
       git \
       g++ \
       cargo \
+      rust \
       build-base \
+      binutils-gold \
       patchelf \
       linux-headers \
       openssl-dev \
-      libffi-dev;
+      libffi-dev \
+      zlib-dev;
 
   RUN set -ex; \
     pip install \
@@ -40,7 +43,8 @@
       cython \
       poetry \
       pur \
-      auditwheel;
+      auditwheel \
+      uv;
 
   COPY ./rootfs/wheel/ /
 
