@@ -43,8 +43,7 @@
       cython \
       poetry \
       pur \
-      auditwheel \
-      uv;
+      auditwheel;
 
   COPY ./rootfs/wheel/ /
 
