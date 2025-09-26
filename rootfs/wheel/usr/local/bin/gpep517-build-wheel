@@ -1,8 +1,11 @@
 #/bin/sh
-  mkdir -p /.dist
+  BRANCH=""
+  if [ ! -z ${2} ]; then
+    BRANCH=" -b ${2}"
+  fi
 
+  git clone --recurse-submodules ${1}${BRANCH} /build
+  cd /build
   gpep517 build-wheel \
     --wheel-dir /.dist \
     --output-fd 3 3>&1 >&2;
-
-  /usr/local/bin/audit-build-wheel
