@@ -21,7 +21,12 @@
     apk --no-cache --update add \
       git \
       g++ \
+      make \
+      cmake \
       cargo \
+      libtool \
+      automake \
+      autoconf \
       rust \
       build-base \
       binutils-gold \
