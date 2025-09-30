@@ -18,7 +18,7 @@
   USER root
 
   RUN set -ex; \
-    apk --no-cache --update add \
+    apk --no-cache --update add --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main \
       git \
       g++ \
       make \
