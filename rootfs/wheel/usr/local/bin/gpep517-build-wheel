@@ -1,4 +1,6 @@
 #/bin/sh
+  mkdir -p /tmp/.whl
+
   BRANCH=""
   if [ ! -z ${2} ]; then
     BRANCH=" -b ${2}"
@@ -7,5 +9,7 @@
   git clone --recurse-submodules ${1}${BRANCH} /build
   cd /build
   gpep517 build-wheel \
-    --wheel-dir /.dist \
+    --wheel-dir /tmp/.whl \
     --output-fd 3 3>&1 >&2;
+
+  find /tmp/.whl -name "*${WHL}*.whl" -exec auditwheel repair -w /.dist "{}" ";"

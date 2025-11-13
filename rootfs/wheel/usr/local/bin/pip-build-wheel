@@ -1,14 +1,13 @@
 #/bin/sh
-  mkdir -p /pip/wheels
-  mkdir -p /.dist
+  mkdir -p /tmp/.whl
 
   pip wheel \
-    --wheel-dir /pip/wheels \
+    --wheel-dir /tmp/.whl \
     $@
 
   for WHL in $@; do
     if echo "${WHL}" | grep -q "=="; then
       WHL=$(echo "${WHL}" | awk -F "==" '{print $1}')
     fi
-    find /pip/wheels -name "*${WHL}*.whl" -exec cp "{}" /.dist ";"
+    find /tmp/.whl -name "*${WHL}*.whl" -exec auditwheel repair -w /.dist "{}" ";"
   done
