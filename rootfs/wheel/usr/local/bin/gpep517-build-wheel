@@ -12,4 +12,5 @@
     --wheel-dir /tmp/.whl \
     --output-fd 3 3>&1 >&2;
 
-  find /tmp/.whl -name "*${WHL}*.whl" -exec auditwheel repair -w /.dist "{}" ";"
+  find /tmp/.whl -name "*.whl" -exec auditwheel repair -w /.dist "{}" ";"
+  find /.dist -name "*.whl" -exec auditwheel show "{}" ";"

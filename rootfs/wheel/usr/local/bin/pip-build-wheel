@@ -11,3 +11,5 @@
     fi
     find /tmp/.whl -name "*${WHL}*.whl" -exec auditwheel repair -w /.dist "{}" ";"
   done
+
+  find /.dist -name "*.whl" -exec auditwheel show "{}" ";"
