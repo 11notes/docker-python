@@ -55,6 +55,9 @@
   RUN set -ex; \
     chmod +x -R /usr/local/bin;
 
+  RUN set -ex; \
+    rm -rf /tmp/*;
+
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
 # ╚═════════════════════════════════════════════════════╝
@@ -88,4 +91,4 @@
 
 # :: EXECUTE
   USER root
-  ENTRYPOINT ["/usr/local/bin/python"]
+  ENTRYPOINT ["/bin/ash"]
