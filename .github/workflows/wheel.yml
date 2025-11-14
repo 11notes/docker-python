@@ -1,4 +1,6 @@
 name: wheel
+run-name: org.version ${{ inputs.version }}
+
 on:
   workflow_dispatch:
     inputs:
@@ -6,6 +8,7 @@ on:
         description: 'set version for wheel'
         type: string
         required: true
+
 jobs:
   wheel:
     runs-on: ubuntu-latest
