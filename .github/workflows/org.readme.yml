@@ -1,4 +1,4 @@
-name: readme
+name: org.readme
 
 on:
   workflow_dispatch:
