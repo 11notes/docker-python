@@ -10,6 +10,7 @@
       WHL=$(echo "${WHL}" | awk -F "==" '{print $1}')
     fi
     find /tmp/.whl -name "*${WHL}*.whl" -exec auditwheel repair -w /.dist "{}" ";"
+    find /tmp/.whl/* -name "*${WHL}*none-any.whl" -exec cp "{}" /.dist ";"
   done
 
   find /.dist -name "*.whl" -exec auditwheel show "{}" ";"

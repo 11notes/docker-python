@@ -13,4 +13,5 @@
     --output-fd 3 3>&1 >&2;
 
   find /tmp/.whl/* -name "*.whl" -exec auditwheel repair -w /.dist "{}" ";"
+  find /tmp/.whl/* -name "*none-any.whl" -exec cp "{}" /.dist ";"
   find /.dist -name "*.whl" -exec auditwheel show "{}" ";"
