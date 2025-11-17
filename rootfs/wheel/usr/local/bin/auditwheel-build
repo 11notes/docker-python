@@ -1,0 +1,15 @@
+#!/bin/sh
+  mkdir -p /tmp/.auditwheel
+  auditwheel repair -w /tmp/.auditwheel ${1} &> /dev/null
+  for WHL in /tmp/.auditwheel/*; do
+    FILE=$(echo ${WHL} | sed 's|/tmp/.auditwheel/||')
+    echo "checking ${FILE} ..."
+    if pip install ${WHL} &> /dev/null; then
+      echo "wheel repair success, copy file ..."
+      cp ${WHL} /.dist
+    else
+      FILE=$(echo ${1} | sed 's|/tmp/.whl/||')
+      echo "wheel repair failed, copy original wheel ${FILE} ..."
+      cp ${1} /.dist
+    fi
+  done
