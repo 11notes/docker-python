@@ -56,7 +56,8 @@
     chmod +x -R /usr/local/bin;
 
   RUN set -ex; \
-    rm -rf /tmp/*;
+    rm -rf /tmp/*; \
+    mkdir -p /.dist;
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
