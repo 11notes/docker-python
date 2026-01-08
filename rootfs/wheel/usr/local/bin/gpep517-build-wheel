@@ -2,8 +2,27 @@
   mkdir -p /tmp/.whl
 
   BRANCH=""
+  REPO=$(echo ${1} | sed "s|https://github.com/||g" | sed "s|.git||g")
   if [ ! -z ${2} ]; then
-    BRANCH=" -b ${2}"
+    NO_V_SUFFIX=$(echo "${2}" | sed 's|^v||')
+    if [ -z "$(curl -s https://api.github.com/repos/${REPO}/tags | jq -r '.[].name | select(test("^'${2}'"))')" ]; then
+      echo "could not find branch ${2}, trying withouth any potential v suffix (${NO_V_SUFFIX})..."
+      if [ -z "$(curl -s https://api.github.com/repos/${REPO}/tags | jq -r '.[].name | select(test("^'${NO_V_SUFFIX}'"))')" ]; then
+        echo "could not find branch ${NO_V_SUFFIX}, trying to add missing v suffix (v${2})..."
+        if [ -z "$(curl -s https://api.github.com/repos/${REPO}/tags | jq -r '.[].name | select(test("^v'${2}'"))')" ]; then
+          echo "could not find ANY branch for ${2} with or withouth suffix!"
+          exit 1
+        else
+          echo "fixing branch from ${2} to v${2}"
+          BRANCH=" -b v${2}"
+        fi
+      else
+        echo "fixing branch from ${2} to ${NO_V_SUFFIX}"
+        BRANCH=" -b ${NO_V_SUFFIX}"
+      fi
+    else
+      BRANCH=" -b ${2}"
+    fi
   fi
 
   git clone --recurse-submodules ${1}${BRANCH} /build
