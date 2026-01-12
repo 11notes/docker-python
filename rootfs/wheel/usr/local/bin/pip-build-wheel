@@ -7,10 +7,11 @@
 
   for WHL in $@; do
     if echo "${WHL}" | grep -q "=="; then
-      WHL=$(echo "${WHL}" | awk -F "==" '{print $1}')
+      NAME=$(echo "${WHL}" | awk -F "==" '{print $1}')
+      NAME_UNDERSCORE=$(echo "${NAME}" | sed 's|-|_|g')
+      find /tmp/.whl/* -iname "*${NAME}*.whl" -o -iname "*${NAME_UNDERSCORE}*.whl" -exec auditwheel-build "{}" ";"
+      find /tmp/.whl/* -iname "*${NAME}*none-any.whl" -o -iname "*${NAME_UNDERSCORE}*none-any.whl" -exec cp "{}" /.dist ";"
     fi
-    find /tmp/.whl/* -name "*${WHL}*.whl" -exec auditwheel-build "{}" ";"
-    find /tmp/.whl/* -name "*${WHL}*none-any.whl" -exec cp "{}" /.dist ";"
   done
 
-  find /.dist -name "*.whl" -exec auditwheel show "{}" ";"
+  find /.dist -iname "*.whl" -exec auditwheel show "{}" ";"
