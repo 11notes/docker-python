@@ -9,9 +9,19 @@
   for WHL in $@; do
     if echo "${WHL}" | grep -q "=="; then
       NAME=$(echo "${WHL}" | awk -F "==" '{print $1}')
-      NAME_UNDERSCORE=$(echo "${NAME}" | sed 's|-|_|g')
-      find /tmp/.whl/* -iname "*${NAME}*.whl" -o -iname "*${NAME_UNDERSCORE}*.whl" -exec auditwheel-build "{}" ";"
-      find /tmp/.whl/* -iname "*${NAME}*none-any.whl" -o -iname "*${NAME_UNDERSCORE}*none-any.whl" -exec cp "{}" /.dist ";"
+      echo "checking ${NAME} ..."
+      find /tmp/.whl -iname "*${NAME}*.whl"
+      find /tmp/.whl -iname "*${NAME}*.whl" -exec auditwheel-build "{}" ";"
+      find /tmp/.whl -iname "*${NAME}*none-any.whl"
+      find /tmp/.whl -iname "*${NAME}*none-any.whl" -exec cp "{}" /.dist ";"
+      if echo "${NAME}" | grep -q "-"; then
+        NAME_UNDERSCORE=$(echo "${NAME}" | sed 's|-|_|g')
+        echo "checking ${NAME_UNDERSCORE} ..."
+        find /tmp/.whl -iname "*${NAME_UNDERSCORE}*.whl" -exec auditwheel-build "{}" ";"
+        find /tmp/.whl -iname "*${NAME_UNDERSCORE}*.whl"
+        find /tmp/.whl -iname "*${NAME_UNDERSCORE}*none-any.whl" -exec cp "{}" /.dist ";"
+        find /tmp/.whl -iname "*${NAME_UNDERSCORE}*none-any.whl"
+      fi
     fi
   done
 

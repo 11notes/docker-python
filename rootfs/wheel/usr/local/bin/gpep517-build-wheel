@@ -34,6 +34,8 @@
     --wheel-dir /tmp/.whl \
     --output-fd 3 3>&1 >&2;
 
-  find /tmp/.whl/* -iname "*.whl" -exec auditwheel-build "{}" ";"
-  find /tmp/.whl/* -iname "*none-any.whl" -exec cp "{}" /.dist ";"
+  find /tmp/.whl -iname "*.whl" -exec auditwheel-build "{}" ";"
+  find /tmp/.whl -iname "*.whl"
+  find /tmp/.whl -iname "*none-any.whl" -exec cp "{}" /.dist ";"
+  find /tmp/.whl -iname "*none-any.whl"
   find /.dist -iname "*.whl" -exec auditwheel show "{}" ";"
