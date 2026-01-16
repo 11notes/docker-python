@@ -3,6 +3,7 @@
 
   pip wheel \
     --wheel-dir /tmp/.whl \
+    --cache-dir /tmp/.whl \
     $@
 
   for WHL in $@; do
