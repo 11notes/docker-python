@@ -1,0 +1,96 @@
+#!/bin/sh
+  PREFIX="[WHEEL-BUILD] "
+  TMP_BUILD=/tmp/.build
+  TMP_WHL=/tmp/.whl
+  TMP_AUDIT=/tmp/.auditwheel
+  TMP_DIST=/.dist
+  mkdir -p ${TMP_BUILD}
+  mkdir -p ${TMP_WHL}
+  mkdir -p ${TMP_AUDIT}
+  mkdir -p ${TMP_DIST}
+
+  wheel-build-git(){
+    cd /build
+    if [ ! -z ${1} ]; then
+      PYPROJECT=/build/pyproject.toml
+      if [ -f ${PYPROJECT} ]; then
+        sed -i 's|version = "0.0.0"|version = "'${1}'"|' ${PYPROJECT};
+      fi
+    fi
+    gpep517 build-wheel \
+      --wheel-dir ${TMP_BUILD} \
+      --output-fd 3 3>&1 >&2;
+
+    wheel-build-find git
+  }
+
+  wheel-build-find(){
+    find ${TMP_BUILD} -iname "*.whl" -exec cp "{}" ${TMP_WHL} ";"
+    for FILE in ${TMP_WHL}/*; do
+      case "${1}" in
+        "git")
+          wheel-build-audit ${FILE}
+        ;;
+
+        "pip")
+          if echo ${FILE} | grep -q "${2}"; then
+            wheel-build-audit ${FILE}
+          fi
+        ;;
+      esac
+    done
+
+    find ${TMP_DIST} -iname "*.whl"
+  }
+
+  wheel-build-audit(){
+    echo "${PREFIX}checking wheel ${1} ..."
+    auditwheel repair -w ${TMP_AUDIT} ${1} &> /dev/null
+    for FILE in ${TMP_AUDIT}/*; do
+      if pip install ${FILE} &> /dev/null; then
+        echo "${PREFIX}using repaired wheel ${FILE}"
+        cp ${FILE} ${TMP_DIST}
+      else
+        if pip install ${1} &> /dev/null; then
+          echo "${PREFIX}using original wheel ${1}"
+          cp ${1} ${TMP_DIST}
+        else
+          echo "${PREFIX}could not produce a valid wheel"
+          exit 1
+        fi
+      fi
+    done
+  }
+
+  if echo "${1}" | grep -q "github.com"; then
+    # check if package comes from github
+    rm -rf /build
+    if [ ! -z ${2} ]; then
+      # check if we need to build a branch
+      BRANCH=$(echo ${2} | sed 's|v||g')
+      if git clone --recurse-submodules ${1} -b ${BRANCH} /build; then
+        wheel-build-git ${BRANCH}
+      else
+        # check if branch has a branch suffix with v present
+        if git clone --recurse-submodules ${1} -b v${BRANCH} /build; then
+          wheel-build-git ${BRANCH}
+        else
+          echo "no git branch ${BRANCH} found"
+          exit 1
+        fi
+      fi
+    else
+      if git clone --recurse-submodules ${1}; then
+        wheel-build-git
+      else
+        echo "could not find github repository ${1}"
+        exit 1
+      fi
+    fi
+  else
+    pip wheel \
+      --wheel-dir ${TMP_BUILD} \
+      --cache-dir ${TMP_BUILD} \
+      ${1}==$(echo ${2} | sed 's|v||g')
+    wheel-build-find pip ${1}
+  fi
