@@ -2,7 +2,7 @@
 # ║                       SETUP                         ║
 # ╚═════════════════════════════════════════════════════╝
 # :: GLOBAL 
-  ARG APP_VERSION=3.13
+  ARG APP_VERSION=0
 
 # :: FOREIGN IMAGES
   FROM 11notes/util:bin AS util-bin
@@ -12,7 +12,7 @@
 # ║                       BUILD                         ║
 # ╚═════════════════════════════════════════════════════╝
 # :: WHEEL
-  FROM 11notes/python:${APP_VERSION} AS build
+  FROM python:${APP_VERSION}-alpine AS build
   COPY --from=util-bin / /
 
   USER root
@@ -48,7 +48,8 @@
       cython \
       poetry \
       pur \
-      auditwheel;
+      auditwheel \
+      uv;
 
   COPY ./rootfs/wheel/ /
 
@@ -85,7 +86,15 @@
           APP_ROOT=${APP_ROOT}
 
     # :: app specific environment
-      ENV PIP_NO_CACHE_DIR=0
+      ENV PIP_NO_CACHE_DIR=0 \
+          PYTHONDONTWRITEBYTECODE=1 \
+          PYTHONUNBUFFERED=1 \
+          PIP_ROOT_USER_ACTION=ignore \
+          PIP_BREAK_SYSTEM_PACKAGES=1 \
+          PIP_DISABLE_PIP_VERSION_CHECK=1 \
+          UV_NO_CACHE=false \
+          UV_SYSTEM_PYTHON=true \
+          UV_EXTRA_INDEX_URL="https://11notes.github.io/python-wheels/"
 
     # :: multi-stage
       COPY --from=build / /

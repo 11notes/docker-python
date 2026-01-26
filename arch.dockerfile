@@ -4,12 +4,11 @@
 # GLOBAL
   ARG APP_UID=1000 \
       APP_GID=1000 \
-      APP_VERSION=3.13.5
+      APP_VERSION=0
 
 # :: FOREIGN IMAGES
   FROM 11notes/distroless AS distroless
   FROM 11notes/distroless:tini AS distroless-tini
-  FROM 11notes/distroless:upx AS distroless-upx
   FROM 11notes/distroless:ds AS distroless-ds
 
 
@@ -23,7 +22,12 @@
   COPY --from=distroless-ds / /
 
   RUN set -ex; \
-    find / -type f -executable -not -name "*.py" -not -name "*.so*" -exec /usr/local/bin/ds "{}" ";"; \
+    pip install \
+      -f https://11notes.github.io/python-wheels/ \
+      uv;
+
+  RUN set -ex; \
+    find / -type f -executable -name uv -exec /usr/local/bin/ds "{}" ";"; \
     /usr/local/bin/ds --bye;
 
 # ╔═════════════════════════════════════════════════════╗
@@ -57,7 +61,10 @@
           PIP_ROOT_USER_ACTION=ignore \
           PIP_BREAK_SYSTEM_PACKAGES=1 \
           PIP_DISABLE_PIP_VERSION_CHECK=1 \
-          PIP_NO_CACHE_DIR=1
+          PIP_NO_CACHE_DIR=1 \
+          UV_NO_CACHE=true \
+          UV_SYSTEM_PYTHON=true \
+          UV_EXTRA_INDEX_URL="https://11notes.github.io/python-wheels/"
 
     # :: multi-stage
       COPY --from=build / /
