@@ -3,7 +3,7 @@
   "name": "python",
   "root": "/",
   "semver": {
-    "version": "3.14.2"
+    "version": "3.14.3"
   },
   "readme": {
     "description": "Python with best practice defaults for container images",
@@ -16,6 +16,6 @@
   },
   "grype": {
     "severity": "critical",
-    "fail":false
+    "fail": false
   }
 }
