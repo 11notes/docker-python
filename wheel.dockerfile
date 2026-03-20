@@ -37,7 +37,7 @@
       zlib-dev;
 
   RUN set -ex; \
-    pip install \
+    uv pip install \
       gpep517 \
       pkgconfig \
       setuptools \
@@ -48,8 +48,7 @@
       cython \
       poetry \
       pur \
-      auditwheel \
-      uv;
+      auditwheel;
 
   COPY ./rootfs/wheel/ /
 
