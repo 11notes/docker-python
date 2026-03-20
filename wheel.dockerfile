@@ -37,6 +37,12 @@
       zlib-dev;
 
   RUN set -ex; \
+    pip install \
+      -f https://11notes.github.io/python-wheels/ \
+      uv;
+
+
+  RUN set -ex; \
     uv pip install \
       gpep517 \
       pkgconfig \
