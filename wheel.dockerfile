@@ -14,6 +14,8 @@
 # :: WHEEL
   FROM python:${APP_VERSION}-alpine AS build
   COPY --from=util-bin / /
+  ENV UV_SYSTEM_PYTHON=true \
+      UV_EXTRA_INDEX_URL="https://11notes.github.io/python-wheels/"
 
   USER root
 
@@ -40,7 +42,6 @@
     pip install \
       -f https://11notes.github.io/python-wheels/ \
       uv;
-
 
   RUN set -ex; \
     uv pip install \
