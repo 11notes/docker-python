@@ -2,7 +2,7 @@
 # ║                       SETUP                         ║
 # ╚═════════════════════════════════════════════════════╝
 # :: GLOBAL 
-  ARG APP_VERSION=0
+  ARG APP_VERSION=0.0
 
 # :: FOREIGN IMAGES
   FROM 11notes/util:bin AS util-bin
@@ -14,9 +14,7 @@
 # :: WHEEL
   FROM python:${APP_VERSION}-alpine AS build
   COPY --from=util-bin / /
-  ENV UV_SYSTEM_PYTHON=true \
-      UV_EXTRA_INDEX_URL="https://11notes.github.io/python-wheels/"
-
+  ENV UV_SYSTEM_PYTHON=true
   USER root
 
   RUN set -ex; \
