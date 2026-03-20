@@ -14,7 +14,8 @@
     if [ ! -z ${1} ]; then
       PYPROJECT=/build/pyproject.toml
       if [ -f ${PYPROJECT} ]; then
-        sed -i 's|version = "0.0.0"|version = "'${1}'"|' ${PYPROJECT};
+        sed -i 's|dynamic = ["version"]|version = "'${1}'"|' ${PYPROJECT}
+        sed -i 's|version = "0.0.0"|version = "'${1}'"|' ${PYPROJECT}
       fi
     fi
     gpep517 build-wheel \
