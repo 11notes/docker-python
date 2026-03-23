@@ -18,7 +18,7 @@
   USER root
 
   RUN set -ex; \
-    apk --no-cache --update add --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main \
+    apk --no-cache --update --repository=https://dl-cdn.alpinelinux.org/alpine/edge/main --repository=https://dl-cdn.alpinelinux.org/alpine/edge/community add \
       git \
       g++ \
       make \
@@ -90,12 +90,13 @@
           APP_ROOT=${APP_ROOT}
 
     # :: app specific environment
-      ENV PIP_NO_CACHE_DIR=0 \
-          PYTHONDONTWRITEBYTECODE=1 \
+      ENV PYTHONDONTWRITEBYTECODE=1 \
           PYTHONUNBUFFERED=1 \
           PIP_ROOT_USER_ACTION=ignore \
           PIP_BREAK_SYSTEM_PACKAGES=1 \
           PIP_DISABLE_PIP_VERSION_CHECK=1 \
+          PIP_NO_CACHE_DIR=0 \
+          PIP_FIND_LINKS="https://11notes.github.io/python-wheels/" \
           UV_NO_CACHE=false \
           UV_SYSTEM_PYTHON=true \
           UV_EXTRA_INDEX_URL="https://11notes.github.io/python-wheels/"
