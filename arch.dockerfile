@@ -2,9 +2,9 @@
 # ║                       SETUP                         ║
 # ╚═════════════════════════════════════════════════════╝
 # GLOBAL
-  ARG APP_UID=1000 \
-      APP_GID=1000 \
-      APP_VERSION=0
+  ARG APP_UID= \
+      APP_GID= \
+      APP_VERSION=0.0
 
 # :: FOREIGN IMAGES
   FROM 11notes/distroless AS distroless
@@ -62,6 +62,7 @@
           PIP_BREAK_SYSTEM_PACKAGES=1 \
           PIP_DISABLE_PIP_VERSION_CHECK=1 \
           PIP_NO_CACHE_DIR=1 \
+          PIP_FIND_LINKS="https://11notes.github.io/python-wheels/" \
           UV_NO_CACHE=true \
           UV_SYSTEM_PYTHON=true \
           UV_EXTRA_INDEX_URL="https://11notes.github.io/python-wheels/"
