@@ -1,5 +1,5 @@
 #!/bin/sh
-  PREFIX="[WHEEL-BUILD] "
+  PREFIX="/usr/local/bin/wheel-build: "
   TMP_BUILD=/tmp/.build
   TMP_WHL=/tmp/.whl
   TMP_AUDIT=/tmp/.auditwheel
@@ -56,7 +56,8 @@
           echo "${PREFIX}using original wheel ${1}"
           cp ${1} ${TMP_DIST}
         else
-          echo "${PREFIX}could not produce a valid wheel"
+          echo "${PREFIX}could not produce a valid wheel:"
+          pip install ${1}
           exit 1
         fi
       fi
