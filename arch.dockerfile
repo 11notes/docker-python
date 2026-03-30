@@ -9,7 +9,6 @@
 # :: FOREIGN IMAGES
   FROM 11notes/distroless AS distroless
   FROM 11notes/distroless:tini AS distroless-tini
-  FROM 11notes/distroless:ds AS distroless-ds
 
 
 # ╔═════════════════════════════════════════════════════╗
@@ -19,16 +18,6 @@
   FROM python:${APP_VERSION}-alpine AS build
   COPY --from=distroless / /
   COPY --from=distroless-tini / /
-  COPY --from=distroless-ds / /
-
-  RUN set -ex; \
-    pip install \
-      -f https://11notes.github.io/python-wheels/ \
-      uv;
-
-  RUN set -ex; \
-    find / -type f -executable -name uv -exec /usr/local/bin/ds "{}" ";"; \
-    /usr/local/bin/ds --bye;
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
