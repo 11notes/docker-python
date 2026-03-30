@@ -33,3 +33,11 @@ jobs:
           workflow: org.update.yml
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "etc":"${{ env.WORKFLOW_UPDATE_BASE64JSON }}" }'
+
+      - name: call wheel
+        uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
+        with:
+          wait-for-completion: false
+          workflow: wheel.yml
+          token: "${{ secrets.REPOSITORY_TOKEN }}"
+          inputs: '{ "version":"${{ env.LATEST_VERSION }}" }'
