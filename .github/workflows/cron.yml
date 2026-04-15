@@ -20,6 +20,7 @@ jobs:
           ref: 'master'
           fetch-depth: 0
 
+      # latest pyhton version
       - name: get latest version and last tag
         run: |
           export LATEST_VERSION=$(curl -s https://api.github.com/repos/python/cpython/tags | jq --raw-output .[].name | grep -oE 'v[0-9]{1,3}.[0-9]{1,3}.[^A-Za-z]{1,}$' | head -n 1 | sed 's|v||')
@@ -42,3 +43,65 @@ jobs:
           workflow: wheel.yml
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "version":"${{ env.LATEST_VERSION }}" }'
+
+      # python 3.13
+      - name: get latest version and last tag
+        run: |
+          for PAGE in {1..50}; do
+            LATEST_VERSION=$(curl -s https://api.github.com/repos/python/cpython/tags?page=${PAGE} | jq --raw-output .[].name | grep -oE 'v[0-9]{1,3}.[0-9]{1,3}.[^A-Za-z]{1,}$' | grep -oE 'v3\.13.[^A-Za-z]{1,}$' | head -n 1 | sed 's|v||')
+            if [ "${LATEST_VERSION}" != "null" ]; then
+              if ! curl -kILs --fail https://hub.docker.com/v2/repositories/11notes/python/tags/${LATEST_VERSION}; then
+                echo "LATEST_VERSION_313=${LATEST_VERSION}" >> "${GITHUB_ENV}"
+              fi
+              break
+            fi
+          done
+
+      - name: call version
+        uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
+        if: env.LATEST_VERSION_313 != 'null'
+        with:
+          wait-for-completion: false
+          workflow: org.version
+          token: "${{ secrets.REPOSITORY_TOKEN }}"
+          inputs: '{ "version":"${{ env.LATEST_VERSION_313 }}" }'
+
+      - name: call wheel
+        uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
+        if: env.LATEST_VERSION_313 != 'null'
+        with:
+          wait-for-completion: false
+          workflow: wheel.yml
+          token: "${{ secrets.REPOSITORY_TOKEN }}"
+          inputs: '{ "version":"${{ env.LATEST_VERSION_313 }}" }'
+
+      # python 3.12
+      - name: get latest version and last tag
+        run: |
+          for PAGE in {1..50}; do
+            LATEST_VERSION=$(curl -s https://api.github.com/repos/python/cpython/tags?page=${PAGE} | jq --raw-output .[].name | grep -oE 'v[0-9]{1,3}.[0-9]{1,3}.[^A-Za-z]{1,}$' | grep -oE 'v3\.12.[^A-Za-z]{1,}$' | head -n 1 | sed 's|v||')
+            if [ "${LATEST_VERSION}" != "null" ]; then
+              if ! curl -kILs --fail https://hub.docker.com/v2/repositories/11notes/python/tags/${LATEST_VERSION}; then
+                echo "LATEST_VERSION_312=${LATEST_VERSION}" >> "${GITHUB_ENV}"
+              fi
+              break
+            fi
+          done
+
+      - name: call version
+        uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
+        if: env.LATEST_VERSION_312 != 'null'
+        with:
+          wait-for-completion: false
+          workflow: org.version
+          token: "${{ secrets.REPOSITORY_TOKEN }}"
+          inputs: '{ "version":"${{ env.LATEST_VERSION_312 }}" }'
+
+      - name: call wheel
+        uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
+        if: env.LATEST_VERSION_312 != 'null'
+        with:
+          wait-for-completion: false
+          workflow: wheel.yml
+          token: "${{ secrets.REPOSITORY_TOKEN }}"
+          inputs: '{ "version":"${{ env.LATEST_VERSION_312 }}" }'
