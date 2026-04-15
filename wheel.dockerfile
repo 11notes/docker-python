@@ -34,7 +34,8 @@
       linux-headers \
       openssl-dev \
       libffi-dev \
-      zlib-dev;
+      zlib-dev \
+      ninja;
 
   RUN set -ex; \
     pip install \
@@ -54,6 +55,7 @@
       poetry \
       pur \
       auditwheel \
+      ninja \
       meson;
 
   COPY ./rootfs/wheel/ /
