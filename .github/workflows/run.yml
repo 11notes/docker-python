@@ -62,7 +62,7 @@ jobs:
 
       - name: call version 3.13
         uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
-        if: env.LATEST_VERSION_313 != 'null'
+        if: env.LATEST_VERSION_313 != ''
         with:
           wait-for-completion: false
           workflow: org.version
@@ -71,7 +71,7 @@ jobs:
 
       - name: call wheel 3.13
         uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
-        if: env.LATEST_VERSION_313 != 'null'
+        if: env.LATEST_VERSION_313 != ''
         with:
           wait-for-completion: false
           workflow: wheel.yml
@@ -94,7 +94,7 @@ jobs:
 
       - name: call version 3.12
         uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
-        if: env.LATEST_VERSION_312 != 'null'
+        if: env.LATEST_VERSION_312 != ''
         with:
           wait-for-completion: false
           workflow: org.version
@@ -103,7 +103,7 @@ jobs:
 
       - name: call wheel 3.12
         uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
-        if: env.LATEST_VERSION_312 != 'null'
+        if: env.LATEST_VERSION_312 != ''
         with:
           wait-for-completion: false
           workflow: wheel.yml
