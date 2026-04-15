@@ -27,6 +27,9 @@ jobs:
           export LATEST_TAG=$(git describe --abbrev=0 --tags `git rev-list --tags --max-count=1` | sed 's|v||')
           echo "WORKFLOW_UPDATE_BASE64JSON=$(echo '{"version":"'${LATEST_VERSION}'", "tag":"'${LATEST_TAG}'"}' | base64 -w 0)" >> "${GITHUB_ENV}"
           echo "LATEST_VERSION=${LATEST_VERSION}" >> "${GITHUB_ENV}"
+          if ! curl -kILs --fail https://hub.docker.com/v2/repositories/11notes/python/tags/wheel-${LATEST_VERSION}; then
+            echo "LATEST_VERSION_WHEEL=true" >> "${GITHUB_ENV}"
+          fi
 
       - name: call org.update
         uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
@@ -37,6 +40,7 @@ jobs:
           inputs: '{ "etc":"${{ env.WORKFLOW_UPDATE_BASE64JSON }}" }'
 
       - name: call wheel
+        if: env.LATEST_VERSION_WHEEL== 'true'
         uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
         with:
           wait-for-completion: false
