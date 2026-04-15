@@ -2,8 +2,6 @@ name: cron
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 5 * * *"
 
 jobs:
   update:
@@ -49,7 +47,7 @@ jobs:
           inputs: '{ "version":"${{ env.LATEST_VERSION }}" }'
 
       # python 3.13
-      - name: get latest version and last tag
+      - name: get latest 3.13 version
         run: |
           for PAGE in {1..50}; do
             LATEST_VERSION=$(curl -s https://api.github.com/repos/python/cpython/tags?page=${PAGE} | jq --raw-output .[].name | grep -oE 'v[0-9]{1,3}.[0-9]{1,3}.[^A-Za-z]{1,}$' | grep -oE 'v3\.13.[^A-Za-z]{1,}$' | head -n 1 | sed 's|v||')
@@ -62,7 +60,7 @@ jobs:
             fi
           done
 
-      - name: call version
+      - name: call version 3.13
         uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
         if: env.LATEST_VERSION_313 != 'null'
         with:
@@ -71,7 +69,7 @@ jobs:
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "version":"${{ env.LATEST_VERSION_313 }}" }'
 
-      - name: call wheel
+      - name: call wheel 3.13
         uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
         if: env.LATEST_VERSION_313 != 'null'
         with:
@@ -81,7 +79,7 @@ jobs:
           inputs: '{ "version":"${{ env.LATEST_VERSION_313 }}" }'
 
       # python 3.12
-      - name: get latest version and last tag
+      - name: get latest 3.12 version
         run: |
           for PAGE in {1..50}; do
             LATEST_VERSION=$(curl -s https://api.github.com/repos/python/cpython/tags?page=${PAGE} | jq --raw-output .[].name | grep -oE 'v[0-9]{1,3}.[0-9]{1,3}.[^A-Za-z]{1,}$' | grep -oE 'v3\.12.[^A-Za-z]{1,}$' | head -n 1 | sed 's|v||')
@@ -94,7 +92,7 @@ jobs:
             fi
           done
 
-      - name: call version
+      - name: call version 3.12
         uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
         if: env.LATEST_VERSION_312 != 'null'
         with:
@@ -103,7 +101,7 @@ jobs:
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "version":"${{ env.LATEST_VERSION_312 }}" }'
 
-      - name: call wheel
+      - name: call wheel 3.12
         uses: the-actions-org/workflow-dispatch@3133c5d135c7dbe4be4f9793872b6ef331b53bc7
         if: env.LATEST_VERSION_312 != 'null'
         with:
