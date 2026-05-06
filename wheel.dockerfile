@@ -12,7 +12,7 @@
 # ║                       BUILD                         ║
 # ╚═════════════════════════════════════════════════════╝
 # :: WHEEL
-  FROM python:${APP_VERSION}-alpine AS build
+  FROM 11notes/python:${APP_VERSION} AS build
   COPY --from=util-bin / /
   ENV UV_SYSTEM_PYTHON=true
   USER root
