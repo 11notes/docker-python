@@ -50,7 +50,8 @@
 
   RUN set -eux; \
     mkdir -p ${BUILD_ROOT}; \
-    git clone ${BUILD_SRC} -b v${APP_VERSION} ${BUILD_ROOT};
+    APP_VERSION_MAJOR_MINOR=$(echo "${APP_VERSION}" | awk -F '.' '{print $1"."$2}'); \
+    git clone ${BUILD_SRC} -b ${APP_VERSION_MAJOR_MINOR} ${BUILD_ROOT};
 
   RUN set -eux; \
     cd ${BUILD_ROOT}; \
@@ -104,6 +105,9 @@
       [ ! -e "/usr/local/bin/$dst" ]; \
       ln -svT "$src" "/usr/local/bin/$dst"; \
     done
+
+  RUN set -eux; \
+    python --version | grep -q "${APP_VERSION}";
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
