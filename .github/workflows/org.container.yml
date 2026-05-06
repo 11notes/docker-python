@@ -488,6 +488,11 @@ jobs:
           by-cve: true
           cache-db: true
 
+      - name: container image / scan with grype FAILED / json output
+        if: env.WORKFLOW_BUILD == 'true' && (failure() || steps.grype.outcome == 'failure') && steps.image-build.outcome == 'success'
+        run: |
+          grype ${{ env.DOCKER_CACHE_GRYPE }} -o json | jq '.matches[] | select(.vulnerability.severity == "${{ env.WORKFLOW_GRYPE_SEVERITY_CUTOFF }}")'
+
       # PUSH IMAGE TO ALL REGISTRIES IF CLEAN
       - name: container image / push to registries
         id: image-push
