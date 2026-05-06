@@ -107,6 +107,8 @@
     done
 
   RUN set -eux; \
+    python --version; \
+    pip --version; \
     python --version | grep -q "${APP_VERSION}";
 
 # ╔═════════════════════════════════════════════════════╗
