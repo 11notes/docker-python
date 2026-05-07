@@ -49,9 +49,19 @@
       git;
 
   RUN set -eux; \
-    mkdir -p ${BUILD_ROOT}; \
-    APP_VERSION_MAJOR_MINOR=$(echo "${APP_VERSION}" | awk -F '.' '{print $1"."$2}'); \
-    git clone ${BUILD_SRC} -b ${APP_VERSION_MAJOR_MINOR} ${BUILD_ROOT};
+    cd ${BUILD_ROOT}; \
+    case "${APP_VERSION}" in \
+      3.14.4) \
+        # apply CVE-2026-6100 patch
+        eleven log info "apply CVE-2026-6100 patch"; \
+        git clone ${BUILD_SRC} -b v${APP_VERSION} --depth 1 ${BUILD_ROOT}; \
+        cd ${BUILD_ROOT}; \
+        git fetch origin 6a5f79c8d7bbf22b083b240910c7a8781a59437d; \
+      ;; \
+      *) \
+        git clone ${BUILD_SRC} -b v${APP_VERSION} ${BUILD_ROOT}; \
+      ;; \
+    case;
 
   RUN set -eux; \
     cd ${BUILD_ROOT}; \
