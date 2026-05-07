@@ -49,7 +49,7 @@
       git;
 
   RUN set -eux; \
-    cd ${BUILD_ROOT}; \
+    mkdir -p ${BUILD_ROOT}; \
     case "${APP_VERSION}" in \
       3.14.4) \
         # apply CVE-2026-6100 patch
