@@ -61,7 +61,7 @@
       *) \
         git clone ${BUILD_SRC} -b v${APP_VERSION} ${BUILD_ROOT}; \
       ;; \
-    case;
+    esac;
 
   RUN set -eux; \
     cd ${BUILD_ROOT}; \
