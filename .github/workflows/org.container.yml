@@ -479,7 +479,6 @@ jobs:
         if: env.WORKFLOW_BUILD == 'true' && (failure() || steps.grype.outcome == 'failure') && steps.image-build.outcome == 'success'
         run: |
           cat ${{ runner.temp }}/grype.json | jq -r '.runs[].tool.driver.rules[].help.markdown' >> $GITHUB_STEP_SUMMARY
-          cat ${{ runner.temp }}/grype.json | jq -r '.runs[].tool.driver.rules[].help.markdown'
 
       # PUSH IMAGE TO ALL REGISTRIES IF CLEAN
       - name: container image / push to registries
