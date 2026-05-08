@@ -465,7 +465,7 @@ jobs:
 
       # SCAN LOCAL CONTAINER IMAGE WITH GRYPE
       - name: container image / scan with grype
-        if: env.WORKFLOW_BUILD == 'true'
+        if: env.WORKFLOW_BUILD == 'true' && matrix.platform == 'amd64'
         id: grype
         uses: anchore/scan-action@e1165082ffb1fe366ebaf02d8526e7c4989ea9d2 # v7.4.0
         with:
