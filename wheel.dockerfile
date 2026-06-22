@@ -38,6 +38,9 @@
       ninja;
 
   RUN set -ex; \
+    apk --update --no-cache upgrade;
+
+  RUN set -ex; \
     pip install \
       -f https://11notes.github.io/python-wheels/ \
       uv;
