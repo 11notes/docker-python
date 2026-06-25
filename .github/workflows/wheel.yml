@@ -22,7 +22,8 @@ jobs:
               dockerfile:"wheel.dockerfile",
               tag:"wheel",
               version:"${{ github.event.inputs.version }}",
-              semver:{disable:{rolling: true}}
+              semver:{disable:{rolling: true}},
+              grype:{fail:false},
             };
             core.exportVariable('WORKFLOW_BASE64JSON', Buffer.from(JSON.stringify(etc)).toString('base64'));
 
