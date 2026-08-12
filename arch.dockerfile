@@ -24,6 +24,7 @@
       dpkg-dev dpkg \
       findutils \
       gcc \
+      g++ \
       gdbm-dev \
       gnupg \
       libc-dev \
@@ -119,7 +120,8 @@
   RUN set -eux; \
     python --version; \
     pip --version; \
-    python --version | grep -q "${APP_VERSION}";
+    python --version | grep -q "${APP_VERSION}"; \
+    python -c "import sysconfig; print(sysconfig.get_config_var('LDCXXSHARED'))" | grep -q "g++";
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
