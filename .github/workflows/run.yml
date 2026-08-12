@@ -59,6 +59,16 @@ jobs:
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "version":"${{ env.LATEST_VERSION }}" }'
 
+      - name: update semver version
+        if: env.ORG_UPDATE == 'true'
+        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 #v1.3.1
+        with:
+          wait-for-completion: false
+          workflow: json.latest.yml
+          repo: 11notes/CICD
+          token: "${{ secrets.REPOSITORY_TOKEN }}"
+          inputs: '{ "app":"python", "version":"${{ env.LATEST_VERSION }}" }'
+
       # python 3.13
       - name: get latest 3.13 version
         run: |
