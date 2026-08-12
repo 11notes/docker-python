@@ -153,10 +153,10 @@
           PIP_BREAK_SYSTEM_PACKAGES=1 \
           PIP_DISABLE_PIP_VERSION_CHECK=1 \
           PIP_NO_CACHE_DIR=1 \
-          PIP_FIND_LINKS="https://11notes.github.io/python-wheels/" \
+          PIP_FIND_LINKS="https://wheels.11notes.dev/" \
           UV_NO_CACHE=true \
           UV_SYSTEM_PYTHON=true \
-          UV_EXTRA_INDEX_URL="https://11notes.github.io/python-wheels/" \
+          UV_EXTRA_INDEX_URL="https://wheels.11notes.dev/" \
           PATH=/usr/local/bin:${PATH}
 
     # :: multi-stage
