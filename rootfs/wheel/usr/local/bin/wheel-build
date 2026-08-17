@@ -19,7 +19,7 @@
         fi
       fi
     else
-      if git clone --recurse-submodules ${1}; then
+      if git clone --recurse-submodules ${1} /build; then
         eleven log "INF" "using github repo ${1}"
         wheel-build-git
       else
