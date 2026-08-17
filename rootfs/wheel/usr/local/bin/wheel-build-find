@@ -1,0 +1,17 @@
+#!/bin/sh
+  find ${WHEEL_BUILD_TMP} -iname "*.whl" -exec cp "{}" ${WHEEL_BUILD_WHL} ";"
+    for FILE in ${WHEEL_BUILD_WHL}/*; do
+      case "${1}" in
+        "git")
+          wheel-build-audit ${FILE}
+        ;;
+
+        "pip")
+          if echo ${FILE} | grep -q "${2}"; then
+            wheel-build-audit ${FILE}
+          fi
+        ;;
+      esac
+    done
+
+    find ${WHEEL_BUILD_DIST} -iname "*.whl"

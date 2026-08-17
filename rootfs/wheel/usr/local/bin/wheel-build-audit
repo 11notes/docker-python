@@ -1,0 +1,19 @@
+#!/bin/sh
+  PREFIX="/usr/local/bin/wheel-build: "
+  echo "${PREFIX}checking wheel ${1} ..."
+  auditwheel repair -w ${WHEEL_BUILD_AUDIT} ${1} &> /dev/null
+  for FILE in ${WHEEL_BUILD_AUDIT}/*; do
+    if pip install ${FILE} &> /dev/null; then
+      echo "${PREFIX}using repaired wheel ${FILE}"
+      cp ${FILE} ${WHEEL_BUILD_DIST}
+    else
+      if pip install ${1} &> /dev/null; then
+        echo "${PREFIX}using original wheel ${1}"
+        cp ${1} ${WHEEL_BUILD_DIST}
+      else
+        echo "${PREFIX}could not produce a valid wheel:"
+        pip install ${1}
+        exit 1
+      fi
+    fi
+  done

@@ -1,0 +1,15 @@
+#!/bin/sh
+  cd /build
+  if [ ! -z ${1} ]; then
+    PYPROJECT=/build/pyproject.toml
+    if [ -f ${PYPROJECT} ]; then
+      SEMVER=$(echo "${1}" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?')
+      sed -i 's|dynamic = \["version"\]|version = "'${SEMVER}'"|' ${PYPROJECT}
+      sed -i 's|version = "0.0.0"|version = "'${SEMVER}'"|' ${PYPROJECT}
+    fi
+  fi
+  gpep517 build-wheel \
+    --wheel-dir ${WHEEL_BUILD_TMP} \
+    --output-fd 3 3>&1 >&2;
+
+  wheel-build-find git

@@ -68,7 +68,10 @@
 
   RUN set -ex; \
     rm -rf /tmp/*; \
-    mkdir -p /.dist;
+    mkdir -p /.dist; \
+    mkdir -p /tmp/.build; \
+    mkdir -p /tmp/.whl; \
+    mkdir -p /tmp/.auditwheel;
 
 # ╔═════════════════════════════════════════════════════╗
 # ║                       IMAGE                         ║
@@ -105,7 +108,12 @@
           PIP_FIND_LINKS="https://wheels.11notes.dev/" \
           UV_NO_CACHE=false \
           UV_SYSTEM_PYTHON=true \
-          UV_EXTRA_INDEX_URL="https://wheels.11notes.dev/"
+          UV_EXTRA_INDEX_URL="https://wheels.11notes.dev/" \
+          WHEEL_BUILD_TMP="/tmp/.build" \
+          WHEEL_BUILD_WHL="/tmp/.whl" \
+          WHEEL_BUILD_AUDIT="/tmp/.auditwheel" \
+          WHEEL_BUILD_DIST="/.dist" \
+          TMP_DIST="/.dist"
 
     # :: multi-stage
       COPY --from=build / /
