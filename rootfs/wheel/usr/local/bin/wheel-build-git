@@ -1,7 +1,7 @@
 #!/bin/sh
-  cd /build
+  cd ${WHEEL_BUILD}
   if [ ! -z ${1} ]; then
-    PYPROJECT=/build/pyproject.toml
+    PYPROJECT=${WHEEL_BUILD}/pyproject.toml
     if [ -f ${PYPROJECT} ]; then
       SEMVER=$(echo "${1}" | grep -oE '[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?')
       sed -i 's|dynamic = \["version"\]|version = "'${SEMVER}'"|' ${PYPROJECT}

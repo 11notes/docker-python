@@ -1,16 +1,16 @@
 #!/bin/sh
   if echo "${1}" | grep -q "github.com"; then
     # check if package comes from github
-    rm -rf /build
+    rm -rf ${WHEEL_BUILD}
     if [ ! -z ${2} ]; then
       # check if we need to build a branch
       BRANCH=$(echo ${2} | sed 's|v||g')
-      if git clone --recurse-submodules ${1} -b ${BRANCH} /build; then
+      if git clone --recurse-submodules ${1} -b ${BRANCH} ${WHEEL_BUILD}; then
         eleven log "INF" "using github repo ${1} ${BRANCH}"
         wheel-build-git ${BRANCH}
       else
         # check if branch has a branch suffix with v present
-        if git clone --recurse-submodules ${1} -b v${BRANCH} /build; then
+        if git clone --recurse-submodules ${1} -b v${BRANCH} ${WHEEL_BUILD}; then
           eleven log "INF" "using github repo ${1} v${BRANCH}"
           wheel-build-git ${BRANCH}
         else
@@ -19,7 +19,7 @@
         fi
       fi
     else
-      if git clone --recurse-submodules ${1} /build; then
+      if git clone --recurse-submodules ${1} ${WHEEL_BUILD}; then
         eleven log "INF" "using github repo ${1}"
         wheel-build-git
       else

@@ -109,6 +109,7 @@
           UV_NO_CACHE=false \
           UV_SYSTEM_PYTHON=true \
           UV_EXTRA_INDEX_URL="https://wheels.11notes.dev/" \
+          WHEEL_BUILD="/build" \
           WHEEL_BUILD_TMP="/tmp/.build" \
           WHEEL_BUILD_WHL="/tmp/.whl" \
           WHEEL_BUILD_AUDIT="/tmp/.auditwheel" \
