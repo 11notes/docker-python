@@ -99,7 +99,8 @@
           APP_ROOT=${APP_ROOT}
 
     # :: app specific environment
-      ENV PYTHONDONTWRITEBYTECODE=1 \
+      ENV ELEVEN_LOG_USE_COLOUR=1 \
+          PYTHONDONTWRITEBYTECODE=1 \
           PYTHONUNBUFFERED=1 \
           PIP_ROOT_USER_ACTION=ignore \
           PIP_BREAK_SYSTEM_PACKAGES=1 \
