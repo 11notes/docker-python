@@ -69,6 +69,38 @@ jobs:
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "app":"python", "version":"${{ env.LATEST_VERSION }}" }'
 
+      # python 3.14
+      - name: get latest 3.14 version
+        run: |
+          for PAGE in {1..50}; do
+            LATEST_VERSION=$(curl -s https://api.github.com/repos/python/cpython/tags?page=${PAGE} | jq --raw-output .[].name | grep -oE 'v[0-9]{1,3}.[0-9]{1,3}.[^A-Za-z]{1,}$' | grep -oE 'v3\.14.[^A-Za-z]{1,}$' | head -n 1 | sed 's|v||')
+            if [ "${LATEST_VERSION}" != "null" ]; then
+              if ! curl -kILs --fail https://hub.docker.com/v2/repositories/11notes/python/tags/${LATEST_VERSION}; then
+                echo "LATEST_VERSION_314=${LATEST_VERSION}" >> "${GITHUB_ENV}"
+                echo "found python version ${LATEST_VERSION} not yet built!"
+              fi
+              break
+            fi
+          done
+
+      - name: call version 3.14
+        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        if: env.LATEST_VERSION_314 != ''
+        with:
+          wait-for-completion: false
+          workflow: org.version
+          token: "${{ secrets.REPOSITORY_TOKEN }}"
+          inputs: '{ "version":"${{ env.LATEST_VERSION_314 }}" }'
+
+      - name: call wheel 3.14
+        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        if: env.LATEST_VERSION_314 != ''
+        with:
+          wait-for-completion: false
+          workflow: wheel.yml
+          token: "${{ secrets.REPOSITORY_TOKEN }}"
+          inputs: '{ "version":"${{ env.LATEST_VERSION_314 }}" }'
+
       # python 3.13
       - name: get latest 3.13 version
         run: |
