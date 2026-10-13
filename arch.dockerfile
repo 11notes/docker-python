@@ -88,7 +88,8 @@
 		  *) \
 			  EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer"; \
         NCPU=1; \
-        sed -i '/#include <linux\/prctl.h>/d' ./Include/internal/pycore_mmap.h; \
+        sed -i '/^[[:space:]]*#[[:space:]]*include[[:space:]]*<linux\/prctl\.h>/d' ./Include/internal/pycore_mmap.h; \
+        ! grep -n 'linux/prctl.h' ./Include/internal/pycore_mmap.h; \
 			  ;; \
     esac; \
     make -s -j ${NCPU} "EXTRA_CFLAGS=${EXTRA_CFLAGS:-}" "LDFLAGS=${LDFLAGS:-}" 2>&1 > /dev/null; \
