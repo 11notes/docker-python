@@ -86,7 +86,7 @@
 			  EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer -mno-omit-leaf-frame-pointer"; \
 			  ;; \
 		  *) \
-			  EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer"; \
+			  EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer -DPR_SET_VMA=0x53564d41 -DPR_SET_VMA_ANON_NAME=0"; \
         NCPU=1; \
         sed -i '/^[[:space:]]*#[[:space:]]*include[[:space:]]*<linux\/prctl\.h>/d' ./Include/internal/pycore_mmap.h; \
         ! grep -n 'linux/prctl.h' ./Include/internal/pycore_mmap.h; \
