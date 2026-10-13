@@ -78,6 +78,7 @@
   RUN set -eux; \
     cd ${BUILD_ROOT}; \
     EXTRA_CFLAGS="-DTHREAD_STACK_SIZE=0x100000"; \
+    NCPU=$(nproc); \
     LDFLAGS="${LDFLAGS:-} -Wl,--strip-all"; \
     ARCH="$(apk --print-arch)"; \
     case "${ARCH}" in \
@@ -86,11 +87,13 @@
 			  ;; \
 		  *) \
 			  EXTRA_CFLAGS="${EXTRA_CFLAGS:-} -fno-omit-frame-pointer"; \
+        NCPU=1; \
+        sed -i '/#include <linux\/prctl.h>/d' ./Include/internal/pycore_mmap.h; \
 			  ;; \
     esac; \
-    make -s -j $(nproc) "EXTRA_CFLAGS=${EXTRA_CFLAGS:-}" "LDFLAGS=${LDFLAGS:-}" 2>&1 > /dev/null; \
+    make -s -j ${NCPU} "EXTRA_CFLAGS=${EXTRA_CFLAGS:-}" "LDFLAGS=${LDFLAGS:-}" 2>&1 > /dev/null; \
     rm python; \
-    make -s -j $(nproc) "EXTRA_CFLAGS=${EXTRA_CFLAGS:-}" "LDFLAGS=${LDFLAGS:-} -Wl,-rpath='\$\$ORIGIN/../lib'" python 2>&1 > /dev/null; \
+    make -s -j ${NCPU} "EXTRA_CFLAGS=${EXTRA_CFLAGS:-}" "LDFLAGS=${LDFLAGS:-} -Wl,-rpath='\$\$ORIGIN/../lib'" python 2>&1 > /dev/null; \
     make install;
 
   RUN set -eux; \
