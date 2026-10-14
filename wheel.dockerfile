@@ -46,7 +46,7 @@
       uv;
 
   RUN set -ex; \
-    uv pip install \
+    uv pip install --index-strategy unsafe-best-match \
       gpep517 \
       pkgconfig \
       setuptools \
