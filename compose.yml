@@ -1,7 +1,7 @@
 name: "python"
 services:
   python:
-    image: "11notes/python:3.15.1"
+    image: "11notes/python:3.15.2"
     environment:
       TZ: "Europe/Zurich"
     command: "--version"
