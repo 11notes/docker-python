@@ -28,9 +28,10 @@ jobs:
             core.exportVariable('WORKFLOW_BASE64JSON', Buffer.from(JSON.stringify(etc)).toString('base64'));
 
       - name: semver / build container image
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
         with:
-          wait-for-completion: false
+          wait-for-completion: true
+          sync-status: true
           workflow: org.container.yml
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "release":"false", "readme":"false", "run-name":"org.container build wheel ${{ github.event.inputs.version }}", "etc":"${{ env.WORKFLOW_BASE64JSON }}" }'

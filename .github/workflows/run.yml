@@ -43,16 +43,17 @@ jobs:
           fi
 
       - name: call org.update
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
         with:
-          wait-for-completion: false
+          wait-for-completion: true
+          sync-status: true
           workflow: org.update.yml
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "etc":"${{ env.WORKFLOW_UPDATE_BASE64JSON }}" }'
 
       - name: call wheel
         if: env.LATEST_VERSION_WHEEL== 'true'
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
         with:
           wait-for-completion: false
           workflow: wheel.yml
@@ -61,7 +62,7 @@ jobs:
 
       - name: update semver version
         if: env.ORG_UPDATE == 'true'
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
         with:
           wait-for-completion: false
           workflow: json.latest.yml
@@ -84,16 +85,17 @@ jobs:
           done
 
       - name: call version 3.14
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
         if: env.LATEST_VERSION_314 != ''
         with:
-          wait-for-completion: false
+          wait-for-completion: true
+          sync-status: true
           workflow: org.version
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "version":"${{ env.LATEST_VERSION_314 }}" }'
 
       - name: call wheel 3.14
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
         if: env.LATEST_VERSION_314 != ''
         with:
           wait-for-completion: false
@@ -116,16 +118,17 @@ jobs:
           done
 
       - name: call version 3.13
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
         if: env.LATEST_VERSION_313 != ''
         with:
-          wait-for-completion: false
+          wait-for-completion: true
+          sync-status: true
           workflow: org.version
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "version":"${{ env.LATEST_VERSION_313 }}" }'
 
       - name: call wheel 3.13
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
         if: env.LATEST_VERSION_313 != ''
         with:
           wait-for-completion: false
@@ -148,16 +151,17 @@ jobs:
           done
 
       - name: call version 3.12
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
         if: env.LATEST_VERSION_312 != ''
         with:
-          wait-for-completion: false
+          wait-for-completion: true
+          sync-status: true
           workflow: org.version
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "version":"${{ env.LATEST_VERSION_312 }}" }'
 
       - name: call wheel 3.12
-        uses: benc-uk/workflow-dispatch@7a027648b88c2413826b6ddd6c76114894dc5ec4 # v1.3.1
+        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
         if: env.LATEST_VERSION_312 != ''
         with:
           wait-for-completion: false
