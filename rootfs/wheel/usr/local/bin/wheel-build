@@ -4,7 +4,7 @@
     rm -rf ${WHEEL_BUILD}
     if [ ! -z ${2} ]; then
       # check if we need to build a branch
-      BRANCH=$(echo ${2} | sed 's|v||g')
+      BRANCH=$(echo ${2} | sed 's|^v||')
       if git clone --recurse-submodules ${1} -b ${BRANCH} ${WHEEL_BUILD}; then
         eleven log info "using github repo ${1} ${BRANCH}"
         wheel-build-git ${BRANCH}
