@@ -12,4 +12,4 @@
     --wheel-dir ${WHEEL_BUILD_TMP} \
     --output-fd 3 3>&1 >&2;
 
-  wheel-build-find git
+  wheel-build-find git || exit 1

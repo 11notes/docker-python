@@ -7,13 +7,13 @@
       BRANCH=$(echo ${2} | sed 's|^v||')
       if git clone --recurse-submodules ${1} -b ${BRANCH} ${WHEEL_BUILD}; then
         eleven log info "using github repo ${1} ${BRANCH}"
-        wheel-build-git ${BRANCH}
+        wheel-build-git ${BRANCH} || exit 1
       else
         eleven log error "git clone --recurse-submodules ${1} -b ${BRANCH} ${WHEEL_BUILD} failed!"
         # check if branch has a branch suffix with v present
         if git clone --recurse-submodules ${1} -b v${BRANCH} ${WHEEL_BUILD}; then
           eleven log info "using github repo ${1} v${BRANCH}"
-          wheel-build-git ${BRANCH}
+          wheel-build-git ${BRANCH} || exit 1
         else
           eleven log error "git clone --recurse-submodules ${1} -b v${BRANCH} ${WHEEL_BUILD} failed!"
           exit 1
@@ -22,7 +22,7 @@
     else
       if git clone --recurse-submodules ${1} ${WHEEL_BUILD}; then
         eleven log info "using github repo ${1}"
-        wheel-build-git
+        wheel-build-git || exit 1
       else
         eleven log error "git clone --recurse-submodules ${1} ${WHEEL_BUILD} failed!"
         exit 1
@@ -33,5 +33,5 @@
       --wheel-dir ${WHEEL_BUILD_TMP} \
       --cache-dir ${WHEEL_BUILD_TMP} \
       ${1}==$(echo ${2} | sed 's|v||g')
-    wheel-build-find pip ${1}
+    wheel-build-find pip ${1} || exit 1
   fi

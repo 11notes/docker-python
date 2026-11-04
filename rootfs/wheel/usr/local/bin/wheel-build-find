@@ -3,12 +3,12 @@
     for FILE in ${WHEEL_BUILD_WHL}/*; do
       case "${1}" in
         "git")
-          wheel-build-audit ${FILE}
+          wheel-build-audit ${FILE} || exit 1
         ;;
 
         "pip")
           if echo ${FILE} | grep -q "${2}"; then
-            wheel-build-audit ${FILE}
+            wheel-build-audit ${FILE} || exit 1
           fi
         ;;
       esac
