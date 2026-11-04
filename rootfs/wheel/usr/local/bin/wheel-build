@@ -29,9 +29,13 @@
       fi
     fi
   else
-    pip wheel \
-      --wheel-dir ${WHEEL_BUILD_TMP} \
-      --cache-dir ${WHEEL_BUILD_TMP} \
-      ${1}==$(echo ${2} | sed 's|v||g')
-    wheel-build-find pip ${1} || exit 1
+    if [ -d "${1}" ]; then
+      WHEEL_BUILD="${1}" wheel-build-git || exit 1
+    else
+      pip wheel \
+        --wheel-dir ${WHEEL_BUILD_TMP} \
+        --cache-dir ${WHEEL_BUILD_TMP} \
+        ${1}==$(echo ${2} | sed 's|v||g')
+      wheel-build-find pip ${1} || exit 1
+    fi
   fi
