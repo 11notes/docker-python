@@ -59,7 +59,9 @@
       pur \
       auditwheel \
       ninja \
-      meson;
+      meson \
+      scikit-build-core \
+      pathspec;
 
   COPY ./rootfs/wheel/ /
 
