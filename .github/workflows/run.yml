@@ -19,6 +19,10 @@ jobs:
   update:
     if: ${{ github.event.inputs.job == 'update' }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        version: [15, 14, 13, 12]
 
     permissions:
       actions: read
@@ -31,28 +35,48 @@ jobs:
           ref: 'master'
           fetch-depth: 0
 
-      # latest pyhton version
-      - name: get latest version and last tag
+      - name: get latest version
+        env:
+          PYTHON_VERSION: ${{ matrix.version }}
+          GITHUB_TOKEN: ${{ github.token }}
         run: |
-          export LATEST_VERSION=$(curl -s https://api.github.com/repos/python/cpython/tags | jq --raw-output .[].name | grep -oE 'v[0-9]{1,3}.[0-9]{1,3}.[^A-Za-z]{1,}$' | head -n 1 | sed 's|v||')
-          export LATEST_TAG=$(git describe --abbrev=0 --tags `git rev-list --tags --max-count=1` | sed 's|v||')
-          echo "WORKFLOW_UPDATE_BASE64JSON=$(echo '{"version":"'${LATEST_VERSION}'", "tag":"'${LATEST_TAG}'"}' | base64 -w 0)" >> "${GITHUB_ENV}"
-          echo "LATEST_VERSION=${LATEST_VERSION}" >> "${GITHUB_ENV}"
-          if ! curl -kILs --fail https://hub.docker.com/v2/repositories/11notes/python/tags/wheel-${LATEST_VERSION}; then
-            echo "LATEST_VERSION_WHEEL=true" >> "${GITHUB_ENV}"
+          LATEST_VERSION=""
+          for PAGE in {1..50}; do
+            RESPONSE=$(curl -fsSL --retry 3 -H "Authorization: Bearer ${GITHUB_TOKEN}" "https://api.github.com/repos/python/cpython/tags?per_page=100&page=${PAGE}")
+
+            if [ "$(jq 'length' <<< "${RESPONSE}")" -eq 0 ]; then
+              break
+            fi
+
+            LATEST_VERSION=$(jq -r '.[].name' <<< "${RESPONSE}" | grep -E "^v${PYTHON_VERSION}\.[0-9]+$" | sort -V | tail -n 1 | sed 's/^v//' || true)
+
+            if [ -n "${LATEST_VERSION}" ]; then
+              break
+            fi
+          done
+
+          if [ -z "${LATEST_VERSION}" ]; then
+            exit 1
           fi
 
-      - name: call org.update
+          echo "LATEST_VERSION=${LATEST_VERSION}" >> "${GITHUB_ENV}"
+
+      - name: check if updated is needed
+        uses: 11notes/actions/update@v1 # v1
+        with:
+          latest: ${{ env.LATEST_VERSION }}
+
+      - name: call org.version
+        if: env.ACTIONS_UPDATE == 'true'
         uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
         with:
           wait-for-completion: true
-          sync-status: true
-          workflow: org.update.yml
+          workflow: org.version.yml
           token: "${{ secrets.REPOSITORY_TOKEN }}"
-          inputs: '{ "etc":"${{ env.WORKFLOW_UPDATE_BASE64JSON }}" }'
+          inputs: '{ "version":"${{ env.LATEST_VERSION }}" }'
 
       - name: call wheel
-        if: env.LATEST_VERSION_WHEEL== 'true'
+        if: env.ACTIONS_UPDATE == 'true'
         uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
         with:
           wait-for-completion: false
@@ -60,111 +84,12 @@ jobs:
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "version":"${{ env.LATEST_VERSION }}" }'
 
-      - name: update semver version
-        if: env.ORG_UPDATE == 'true'
+      - name: update semver
         uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
+        if: env.ACTIONS_UPDATE == 'true' && matrix.version == 15
         with:
           wait-for-completion: false
           workflow: json.latest.yml
           repo: 11notes/CICD
           token: "${{ secrets.REPOSITORY_TOKEN }}"
           inputs: '{ "app":"python", "version":"${{ env.LATEST_VERSION }}" }'
-
-      # python 3.14
-      - name: get latest 3.14 version
-        run: |
-          for PAGE in {1..50}; do
-            LATEST_VERSION=$(curl -s https://api.github.com/repos/python/cpython/tags?page=${PAGE} | jq --raw-output .[].name | grep -oE 'v[0-9]{1,3}.[0-9]{1,3}.[^A-Za-z]{1,}$' | grep -oE 'v3\.14.[^A-Za-z]{1,}$' | head -n 1 | sed 's|v||')
-            if [ "${LATEST_VERSION}" != "null" ]; then
-              if ! curl -kILs --fail https://hub.docker.com/v2/repositories/11notes/python/tags/${LATEST_VERSION}; then
-                echo "LATEST_VERSION_314=${LATEST_VERSION}" >> "${GITHUB_ENV}"
-                echo "found python version ${LATEST_VERSION} not yet built!"
-              fi
-              break
-            fi
-          done
-
-      - name: call version 3.14
-        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
-        if: env.LATEST_VERSION_314 != ''
-        with:
-          wait-for-completion: true
-          sync-status: true
-          workflow: org.version
-          token: "${{ secrets.REPOSITORY_TOKEN }}"
-          inputs: '{ "version":"${{ env.LATEST_VERSION_314 }}" }'
-
-      - name: call wheel 3.14
-        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
-        if: env.LATEST_VERSION_314 != ''
-        with:
-          wait-for-completion: false
-          workflow: wheel.yml
-          token: "${{ secrets.REPOSITORY_TOKEN }}"
-          inputs: '{ "version":"${{ env.LATEST_VERSION_314 }}" }'
-
-      # python 3.13
-      - name: get latest 3.13 version
-        run: |
-          for PAGE in {1..50}; do
-            LATEST_VERSION=$(curl -s https://api.github.com/repos/python/cpython/tags?page=${PAGE} | jq --raw-output .[].name | grep -oE 'v[0-9]{1,3}.[0-9]{1,3}.[^A-Za-z]{1,}$' | grep -oE 'v3\.13.[^A-Za-z]{1,}$' | head -n 1 | sed 's|v||')
-            if [ "${LATEST_VERSION}" != "null" ]; then
-              if ! curl -kILs --fail https://hub.docker.com/v2/repositories/11notes/python/tags/${LATEST_VERSION}; then
-                echo "LATEST_VERSION_313=${LATEST_VERSION}" >> "${GITHUB_ENV}"
-                echo "found python version ${LATEST_VERSION} not yet built!"
-              fi
-              break
-            fi
-          done
-
-      - name: call version 3.13
-        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
-        if: env.LATEST_VERSION_313 != ''
-        with:
-          wait-for-completion: true
-          sync-status: true
-          workflow: org.version
-          token: "${{ secrets.REPOSITORY_TOKEN }}"
-          inputs: '{ "version":"${{ env.LATEST_VERSION_313 }}" }'
-
-      - name: call wheel 3.13
-        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
-        if: env.LATEST_VERSION_313 != ''
-        with:
-          wait-for-completion: false
-          workflow: wheel.yml
-          token: "${{ secrets.REPOSITORY_TOKEN }}"
-          inputs: '{ "version":"${{ env.LATEST_VERSION_313 }}" }'
-
-      # python 3.12
-      - name: get latest 3.12 version
-        run: |
-          for PAGE in {1..50}; do
-            LATEST_VERSION=$(curl -s https://api.github.com/repos/python/cpython/tags?page=${PAGE} | jq --raw-output .[].name | grep -oE 'v[0-9]{1,3}.[0-9]{1,3}.[^A-Za-z]{1,}$' | grep -oE 'v3\.12.[^A-Za-z]{1,}$' | head -n 1 | sed 's|v||')
-            if [ "${LATEST_VERSION}" != "null" ]; then
-              if ! curl -kILs --fail https://hub.docker.com/v2/repositories/11notes/python/tags/${LATEST_VERSION}; then
-                echo "LATEST_VERSION_312=${LATEST_VERSION}" >> "${GITHUB_ENV}"
-                echo "found python version ${LATEST_VERSION} not yet built!"
-              fi
-              break
-            fi
-          done
-
-      - name: call version 3.12
-        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
-        if: env.LATEST_VERSION_312 != ''
-        with:
-          wait-for-completion: true
-          sync-status: true
-          workflow: org.version
-          token: "${{ secrets.REPOSITORY_TOKEN }}"
-          inputs: '{ "version":"${{ env.LATEST_VERSION_312 }}" }'
-
-      - name: call wheel 3.12
-        uses: benc-uk/workflow-dispatch@d004979be141727c7a17c28f603e2facc40d0855 # v1.3.3
-        if: env.LATEST_VERSION_312 != ''
-        with:
-          wait-for-completion: false
-          workflow: wheel.yml
-          token: "${{ secrets.REPOSITORY_TOKEN }}"
-          inputs: '{ "version":"${{ env.LATEST_VERSION_312 }}" }'
