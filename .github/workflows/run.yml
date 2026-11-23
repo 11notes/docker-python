@@ -37,28 +37,12 @@ jobs:
 
       - name: get latest version
         env:
-          PYTHON_VERSION: ${{ matrix.version }}
-          GITHUB_TOKEN: ${{ github.token }}
+          PYTHON_VERSION: "3.${{ matrix.version }}"
         run: |
-          set -euo pipefail
-          LATEST_VERSION=""
           for PAGE in {1..50}; do
-            RESPONSE=$(curl -fsSL --retry 3 -H "Authorization: Bearer ${GITHUB_TOKEN}" "https://api.github.com/repos/python/cpython/tags?per_page=100&page=${PAGE}")
-
-            if [ "$(jq 'length' <<< "${RESPONSE}")" -eq 0 ]; then
-              break
-            fi
-
-            LATEST_VERSION=$(jq -r '.[].name' <<< "${RESPONSE}" | grep -E "^v${PYTHON_VERSION}\.[0-9]+$" | sort -V | tail -n 1 | sed 's/^v//' || true)
-
-            if [ -n "${LATEST_VERSION}" ]; then
-              break
-            fi
+            LATEST_VERSION=$(git ls-remote --tags --refs https://github.com/python/cpython "v${PYTHON_VERSION}.*" | awk -F/ '{print $NF}' | grep -E "^v${PYTHON_VERSION}\.[0-9]+$" | sort -V | tail -n 1 | sed 's/^v//')
+            [ -n "${LATEST_VERSION}" ] || { exit 1; }
           done
-
-          if [ -z "${LATEST_VERSION}" ]; then
-            exit 1
-          fi
 
           echo "LATEST_VERSION=${LATEST_VERSION}" >> "${GITHUB_ENV}"
 
